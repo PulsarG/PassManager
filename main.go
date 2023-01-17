@@ -1,36 +1,44 @@
 package main
 
 import (
-	/* "fmt"
-	"math/rand" */
 	"encoding/json"
 	"fmt"
 	"io"
 
-	/* "fyne.io/fyne/v2" */
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-
 	/* "fyne.io/fyne/v2/layout" */
 	"fyne.io/fyne/v2/widget"
-	/* "fyne.io/fyne/v2/canvas" */ /* "github.com/PulsarG/Enigma_algorithm" */)
+	/* "fyne.io/fyne/v2/canvas" */)
 
 type Test struct {
 	ID       int
 	Username string
 }
 
+type ArrTest struct {
+	TestItems []Test
+}
+
 func main() {
 
-	jsonStr := `{"id": 42, "username": "alex"}`
+	id := 2
+	name := "Arve"
 
-	data := []byte(jsonStr)
+	test := Test{ID: id, Username: name}
+	test2 := Test{ID: 2, Username: "Alex"}
 
-	t := &Test{}
-	json.Unmarshal(data, t)
-	fmt.Println(t.ID)
+	Ti := []Test{}
+	Ti = append(Ti, test, test2)
+
+	/* fmt.Println("Одиночный: ", test)
+	fmt.Println("Слайс: ", Ti) */
+
+	byteArray, _ := json.Marshal(Ti)
+
+	fmt.Println(string(byteArray))
 
 	textField := widget.NewEntry()
 
@@ -39,47 +47,15 @@ func main() {
 
 	w.Resize(fyne.NewSize(500, 500))
 
-	t.ID = 50
-	result, _ := json.Marshal(t)
-
 	scroll := container.NewVBox(widget.NewCheck("qwe", nil), textField)
 
-	manageConteiner := container.NewHBox(widget.NewButton("SSS", func() { saveFile(string(result), w) }), widget.NewButton("OOO", func() { openFile(textField, w) }))
+	manageConteiner := container.NewHBox(widget.NewButton("SSS", func() { saveFile(string(byteArray), w) }), widget.NewButton("OOO", func() { openFile(textField, w) }))
 
 	mainContainer := container.NewGridWithRows(2, scroll, manageConteiner)
 
 	w.SetContent(mainContainer)
 	w.Show()
 	App.Run()
-	/* Arr := make([]int, 10)
-
-	for i := 0; i < len(Arr); i++ {
-
-		readyIndex := make([]int, 10)
-
-	AGAIN:
-		j := rand.Intn(10)
-
-		for l := 0; l < len(readyIndex); l++ {
-			if readyIndex[l] == j {
-				goto AGAIN
-			} else {
-				continue
-			}
-		}
-
-		if i != j {
-			Arr[i] = j
-			Arr[j] = i
-			readyIndex = append(readyIndex, j)
-			continue
-		} else {
-			goto AGAIN
-		}
-	}
-	for k := 0; k < len(Arr); k++ {
-		fmt.Println("Индекс: ", k, "Значение: ", Arr[k])
-	} */
 }
 
 func saveFile(code string, w fyne.Window) {
@@ -96,13 +72,25 @@ func saveFile(code string, w fyne.Window) {
 }
 
 func openFile(textField *widget.Entry, w fyne.Window) {
-	var d string
+	/* var d string */
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, err error) {
 			if uc != nil {
 				data, _ := io.ReadAll(uc)
-				d = string(data)
-				textField.SetText(d)
+
+				/* d = string(data) */
+
+				dd := []Test{}
+				err := json.Unmarshal(data, &dd)
+				if err != nil {
+					panic(err)
+				}
+
+				textField.SetText(dd[0].Username)
+
+				for i := 0; i < len(dd); i++ {
+					fmt.Println("Unmarshal: ", dd[i])
+				}
 			} else {
 				return
 			}
