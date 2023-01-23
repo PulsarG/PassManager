@@ -27,11 +27,13 @@ type CellData struct {
 	Pass  string
 }
 
+var EntryCode widget.Entry
+
 var NewCellList = []CellData{}
 var Appp fyne.App
 
 func main() {
-	
+
 	App := app.New()
 	Appp = App
 	mainWindow := App.NewWindow(cons.WINDOW_NAME)
@@ -51,7 +53,7 @@ func сreateWindowContent(mainWindow fyne.Window) *fyne.Container {
 
 	containerAddandKey := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_CREATE_NEW_CELL, func() {
 		createNewCellList(mainWindow)
-	}), widget.NewCheck("123", nil))
+	}), &EntryCode)
 	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton("Open", func() {
 		openFile(mainWindow)
 	}), elem.NewButton("Save", func() {
@@ -64,10 +66,10 @@ func сreateWindowContent(mainWindow fyne.Window) *fyne.Container {
 	return containerFull
 }
 
-func createList() *fyne.Container {
+func createList(w *fyne.Window) *fyne.Container {
 	listContainer := container.NewVBox()
 	for i := 0; i < len(NewCellList); i++ {
-		containerListElement := elem.CreateListElement(NewCellList[i].Label, NewCellList[i].Login, NewCellList[i].Pass)
+		containerListElement := elem.CreateListElement(NewCellList[i].Label, NewCellList[i].Login, NewCellList[i].Pass, *w, EntryCode.Text)
 		listContainer.Add(containerListElement)
 	}
 	return listContainer
@@ -115,7 +117,6 @@ func saveFile(NewCellList []CellData, w fyne.Window) {
 }
 
 func openFile(w fyne.Window) {
-
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
@@ -125,14 +126,8 @@ func openFile(w fyne.Window) {
 					panic(err)
 				}
 
-				/* textField.SetText(dd[0].Username) */
-
-				for i := 0; i < len(NewCellList); i++ {
-					fmt.Println("Unmarshal: ", NewCellList[i])
-				}
-
-				w2 := Appp.NewWindow("2134") // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				w2.SetContent(createList())
+				w2 := Appp.NewWindow(cons.WINDOW_LIST_NAME) // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				w2.SetContent(createList(&w2))
 				w2.Show()
 
 			} else {
