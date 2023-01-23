@@ -5,95 +5,155 @@ import (
 	"fmt"
 	"io"
 
+	"PassManager/cell"
+	"PassManager/cons"
+	"PassManager/elem"
+	/* 	"PassManager/src" */
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
-	/* "fyne.io/fyne/v2/layout" */
+
 	"fyne.io/fyne/v2/widget"
-	/* "fyne.io/fyne/v2/canvas" */)
 
-type Test struct {
-	ID       int
-	Username string
+	/* "fyne.io/fyne/v2/canvas" */
+	/* "fyne.io/fyne/v2/container" */
+	"fyne.io/fyne/v2/dialog"
+)
+
+type CellData struct {
+	Label string
+	Login string
+	Pass  string
 }
 
-type ArrTest struct {
-	TestItems []Test
-}
+var NewCellList = []CellData{}
+var Appp fyne.App
 
 func main() {
-
-	id := 2
-	name := "Arve"
-
-	test := Test{ID: id, Username: name}
-	test2 := Test{ID: 2, Username: "Alex"}
-
-	Ti := []Test{}
-	Ti = append(Ti, test, test2)
-
-	/* fmt.Println("Одиночный: ", test)
-	fmt.Println("Слайс: ", Ti) */
-
-	byteArray, _ := json.Marshal(Ti)
-
-	fmt.Println(string(byteArray))
-
-	textField := widget.NewEntry()
-
+	
 	App := app.New()
-	w := App.NewWindow("qwe")
+	Appp = App
+	mainWindow := App.NewWindow(cons.WINDOW_NAME)
 
-	w.Resize(fyne.NewSize(500, 500))
+	/* windowContent := сreateWindowContent(mainWindow) */
 
-	scroll := container.NewVBox(widget.NewCheck("qwe", nil), textField)
+	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
-	manageConteiner := container.NewHBox(widget.NewButton("SSS", func() { saveFile(string(byteArray), w) }), widget.NewButton("OOO", func() { openFile(textField, w) }))
-
-	mainContainer := container.NewGridWithRows(2, scroll, manageConteiner)
-
-	w.SetContent(mainContainer)
-	w.Show()
+	mainWindow.SetContent(сreateWindowContent(mainWindow))
+	mainWindow.Show()
 	App.Run()
 }
 
-func saveFile(code string, w fyne.Window) {
+func сreateWindowContent(mainWindow fyne.Window) *fyne.Container {
+
+	/* containerList := createList() */
+
+	containerAddandKey := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_CREATE_NEW_CELL, func() {
+		createNewCellList(mainWindow)
+	}), widget.NewCheck("123", nil))
+	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton("Open", func() {
+		openFile(mainWindow)
+	}), elem.NewButton("Save", func() {
+		saveFile(NewCellList, mainWindow)
+	}))
+	containerManager := container.NewGridWithRows(2, containerAddandKey, containerOpenSaveBtn)
+
+	containerFull := container.NewCenter(containerManager)
+
+	return containerFull
+}
+
+func createList() *fyne.Container {
+	listContainer := container.NewVBox()
+	for i := 0; i < len(NewCellList); i++ {
+		containerListElement := elem.CreateListElement(NewCellList[i].Label, NewCellList[i].Login, NewCellList[i].Pass)
+		listContainer.Add(containerListElement)
+	}
+	return listContainer
+}
+
+func createNewCellList(window fyne.Window) {
+	newCell := cell.CreateNewCell()
+
+	sendBtn := elem.NewButton("Save Data", func() { setDataFromDialogCell(newCell) })
+
+	dialogContainer := container.NewVBox(newCell.GetLabel(), newCell.GetLogin(), newCell.GetPass(), sendBtn)
+
+	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Send", dialogContainer, window)
+}
+
+func setDataFromDialogCell(newCell *cell.Cell) {
+	newCellData := CellData{}
+
+	newCellData.Label = newCell.GetLabel().Text
+	newCellData.Login = newCell.GetLogin().Text
+	newCellData.Pass = newCell.GetPass().Text
+
+	NewCellList = append(NewCellList, newCellData)
+
+	fmt.Println(NewCellList)
+}
+
+func saveFile(NewCellList []CellData, w fyne.Window) {
+	code, err := json.Marshal(NewCellList)
+	if err != nil {
+		fmt.Println("Error", err)
+	}
+	fmt.Println(NewCellList)
+	fmt.Println(string(code))
+
 	dialog.ShowFileSave(
 		func(uc fyne.URIWriteCloser, err error) {
 			if uc != nil {
-				io.WriteString(uc, code)
+				io.WriteString(uc, string(code))
 			} else {
 				return
 			}
 		}, w,
 	)
-
 }
 
-func openFile(textField *widget.Entry, w fyne.Window) {
-	/* var d string */
+func openFile(w fyne.Window) {
+
 	dialog.ShowFileOpen(
-		func(uc fyne.URIReadCloser, err error) {
+		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
 				data, _ := io.ReadAll(uc)
-
-				/* d = string(data) */
-
-				dd := []Test{}
-				err := json.Unmarshal(data, &dd)
+				err := json.Unmarshal(data, &NewCellList)
 				if err != nil {
 					panic(err)
 				}
 
-				textField.SetText(dd[0].Username)
+				/* textField.SetText(dd[0].Username) */
 
-				for i := 0; i < len(dd); i++ {
-					fmt.Println("Unmarshal: ", dd[i])
+				for i := 0; i < len(NewCellList); i++ {
+					fmt.Println("Unmarshal: ", NewCellList[i])
 				}
+
+				w2 := Appp.NewWindow("2134") // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				w2.SetContent(createList())
+				w2.Show()
+
 			} else {
 				return
 			}
 		}, w,
 	)
 }
+
+/* Старт приложения:
+
+Проверка наличия существующего файла
+
+Если файл есть - открытие файла - запрос на загрузку - выбор
+	Парсинг данных из файла в список
+		--- создание виджета списка
+		--- сборка из Лейбла, Кнопок Логин и Пароль, кнопок Показа и Изменения
+	Для добавления нового эелемента постоянная кнопка добавления
+	с Диалоговым окном и и полями Лейбл, Логин, Пасс
+
+Если файла нет - добавления нового эелемента постоянная кнопка добавления
+с Диалоговым окном и и полями Лейбл, Логин, Пасс
+	Внесение в БД
+		Сохранение во внешнем файле */
