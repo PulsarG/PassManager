@@ -8,17 +8,15 @@ import (
 	"PassManager/cell"
 	"PassManager/cons"
 	"PassManager/elem"
+
 	/* 	"PassManager/src" */
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/container"
-
-	"fyne.io/fyne/v2/widget"
-
 	/* "fyne.io/fyne/v2/canvas" */
-	/* "fyne.io/fyne/v2/container" */
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 )
 
 type CellData struct {
@@ -37,33 +35,30 @@ func main() {
 	App := app.New()
 	Appp = App
 	mainWindow := App.NewWindow(cons.WINDOW_NAME)
-
-	/* windowContent := сreateWindowContent(mainWindow) */
+	canvas := mainWindow.Canvas()
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
-	mainWindow.SetContent(сreateWindowContent(mainWindow))
+	canvas.SetContent(container.NewVBox(createMangerBtns(mainWindow, canvas)))
 	mainWindow.Show()
 	App.Run()
 }
 
-func сreateWindowContent(mainWindow fyne.Window) *fyne.Container {
+/* func сreateWindowContent(mainWindow fyne.Window, canvas fyne.Canvas) *fyne.Container {
+	return container.NewVBox(createMangerBtns(mainWindow, canvas))
+} */
 
-	/* containerList := createList() */
-
+func createMangerBtns(mainWindow fyne.Window, canvas fyne.Canvas) *fyne.Container {
 	containerAddandKey := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_CREATE_NEW_CELL, func() {
 		createNewCellList(mainWindow)
 	}), &EntryCode)
 	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton("Open", func() {
-		openFile(mainWindow)
+		openFile(mainWindow, canvas)
 	}), elem.NewButton("Save", func() {
 		saveFile(NewCellList, mainWindow)
 	}))
 	containerManager := container.NewGridWithRows(2, containerAddandKey, containerOpenSaveBtn)
-
-	containerFull := container.NewCenter(containerManager)
-
-	return containerFull
+	return containerManager
 }
 
 func createList(w *fyne.Window) *fyne.Container {
@@ -116,7 +111,7 @@ func saveFile(NewCellList []CellData, w fyne.Window) {
 	)
 }
 
-func openFile(w fyne.Window) {
+func openFile(w fyne.Window, canvas fyne.Canvas) {
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
@@ -126,9 +121,8 @@ func openFile(w fyne.Window) {
 					panic(err)
 				}
 
-				w2 := Appp.NewWindow(cons.WINDOW_LIST_NAME) // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				w2.SetContent(createList(&w2))
-				w2.Show()
+				newContent := container.NewVBox(createMangerBtns(w, canvas), createList(&w))
+				canvas.SetContent(newContent)
 
 			} else {
 				return
