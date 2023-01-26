@@ -25,21 +25,25 @@ type CellData struct {
 	Pass  string
 }
 
-var EntryCode widget.Entry
-
-var NewCellList = []CellData{}
-var Appp fyne.App
+type AppData struct {
+	app         fyne.App
+	newCellList []CellData
+	entryCode   widget.Entry
+	canvas      fyne.Canvas
+	mainWindow  fyne.Window
+}
 
 func main() {
 
 	App := app.New()
-	Appp = App
 	mainWindow := App.NewWindow(cons.WINDOW_NAME)
 	canvas := mainWindow.Canvas()
 
+	NewAppData := AppData{app: App, mainWindow: mainWindow, canvas: canvas}
+	
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
-	canvas.SetContent(container.NewVBox(createMangerBtns(mainWindow, canvas)))
+	canvas.SetContent(container.NewCenter(createMangerBtns(NewAppData)))
 	mainWindow.Show()
 	App.Run()
 }
@@ -48,48 +52,49 @@ func main() {
 	return container.NewVBox(createMangerBtns(mainWindow, canvas))
 } */
 
-func createMangerBtns(mainWindow fyne.Window, canvas fyne.Canvas) *fyne.Container {
+func createMangerBtns(NewAppData AppData) *fyne.Container {
+	NewAppData.entryCode.PlaceHolder = "Enter KeyCode"
 	containerAddandKey := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_CREATE_NEW_CELL, func() {
-		createNewCellList(mainWindow)
-	}), &EntryCode)
-	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton("Open", func() {
-		openFile(mainWindow, canvas)
-	}), elem.NewButton("Save", func() {
-		saveFile(NewCellList, mainWindow)
+		createNewCellList(NewAppData)
+	}), &NewAppData.entryCode)
+	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_OPEN, func() {
+		openFile(NewAppData)
+	}), elem.NewButton(cons.BTN_LABEL_SAVE, func() {
+		/* saveFile(NewAppData) */
 	}))
 	containerManager := container.NewGridWithRows(2, containerAddandKey, containerOpenSaveBtn)
 	return containerManager
 }
 
-func createList(w *fyne.Window) *fyne.Container {
+func createList(NewAppData AppData) *fyne.Container {
 	listContainer := container.NewVBox()
-	for i := 0; i < len(NewCellList); i++ {
-		containerListElement := elem.CreateListElement(NewCellList[i].Label, NewCellList[i].Login, NewCellList[i].Pass, *w, EntryCode.Text)
+	for i := 0; i < len(NewAppData.newCellList); i++ {
+		containerListElement := elem.CreateListElement(NewAppData.newCellList[i].Label, NewAppData.newCellList[i].Login, NewAppData.newCellList[i].Pass, *&NewAppData.mainWindow, NewAppData.entryCode.Text)
 		listContainer.Add(containerListElement)
 	}
 	return listContainer
 }
 
-func createNewCellList(window fyne.Window) {
+func createNewCellList(NewAppData AppData) {
 	newCell := cell.CreateNewCell()
 
-	sendBtn := elem.NewButton("Save Data", func() { setDataFromDialogCell(newCell) })
+	sendBtn := elem.NewButton("Save Data", func() { setDataFromDialogCell(newCell, NewAppData) })
 
 	dialogContainer := container.NewVBox(newCell.GetLabel(), newCell.GetLogin(), newCell.GetPass(), sendBtn)
 
-	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Send", dialogContainer, window)
+	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Send", dialogContainer, NewAppData.mainWindow)
 }
 
-func setDataFromDialogCell(newCell *cell.Cell) {
+func setDataFromDialogCell(newCell *cell.Cell, NewAppData AppData) {
 	newCellData := CellData{}
 
 	newCellData.Label = newCell.GetLabel().Text
 	newCellData.Login = newCell.GetLogin().Text
 	newCellData.Pass = newCell.GetPass().Text
 
-	NewCellList = append(NewCellList, newCellData)
+	NewAppData.newCellList = append(NewAppData.newCellList, newCellData)
 
-	fmt.Println(NewCellList)
+	fmt.Println(NewAppData.newCellList)
 }
 
 func saveFile(NewCellList []CellData, w fyne.Window) {
@@ -111,23 +116,22 @@ func saveFile(NewCellList []CellData, w fyne.Window) {
 	)
 }
 
-func openFile(w fyne.Window, canvas fyne.Canvas) {
+func openFile(NewAppData AppData) {
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
 				data, _ := io.ReadAll(uc)
-				err := json.Unmarshal(data, &NewCellList)
+				err := json.Unmarshal(data, &NewAppData.newCellList)
 				if err != nil {
 					panic(err)
 				}
 
-				newContent := container.NewVBox(createMangerBtns(w, canvas), createList(&w))
-				canvas.SetContent(newContent)
+				NewAppData.canvas.SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
 
 			} else {
 				return
 			}
-		}, w,
+		}, NewAppData.mainWindow,
 	)
 }
 
