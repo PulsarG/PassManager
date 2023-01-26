@@ -8,30 +8,20 @@ import (
 	"PassManager/cell"
 	"PassManager/cons"
 	"PassManager/elem"
-
-	/* 	"PassManager/src" */
+	"PassManager/src"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	/* "fyne.io/fyne/v2/canvas" */
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
-)
+	/* "fyne.io/fyne/v2/widget" */)
 
-type CellData struct {
+/* type CellData struct {
 	Label string
 	Login string
 	Pass  string
-}
-
-type AppData struct {
-	app         fyne.App
-	newCellList []CellData
-	entryCode   widget.Entry
-	canvas      fyne.Canvas
-	mainWindow  fyne.Window
-}
+} */
 
 func main() {
 
@@ -39,8 +29,8 @@ func main() {
 	mainWindow := App.NewWindow(cons.WINDOW_NAME)
 	canvas := mainWindow.Canvas()
 
-	NewAppData := AppData{app: App, mainWindow: mainWindow, canvas: canvas}
-	
+	NewAppData := src.NewAppData(App, mainWindow, canvas)
+
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
 	canvas.SetContent(container.NewCenter(createMangerBtns(NewAppData)))
@@ -48,90 +38,87 @@ func main() {
 	App.Run()
 }
 
-/* func сreateWindowContent(mainWindow fyne.Window, canvas fyne.Canvas) *fyne.Container {
-	return container.NewVBox(createMangerBtns(mainWindow, canvas))
-} */
-
-func createMangerBtns(NewAppData AppData) *fyne.Container {
-	NewAppData.entryCode.PlaceHolder = "Enter KeyCode"
+func createMangerBtns(NewAppData *src.AppData) *fyne.Container {
+	NewAppData.GetEntryCode().PlaceHolder = "Enter KeyCode"
 	containerAddandKey := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_CREATE_NEW_CELL, func() {
 		createNewCellList(NewAppData)
-	}), &NewAppData.entryCode)
+	}), NewAppData.GetEntryCode())
 	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_OPEN, func() {
 		openFile(NewAppData)
 	}), elem.NewButton(cons.BTN_LABEL_SAVE, func() {
-		/* saveFile(NewAppData) */
+		saveFile(NewAppData)
 	}))
 	containerManager := container.NewGridWithRows(2, containerAddandKey, containerOpenSaveBtn)
 	return containerManager
 }
 
-func createList(NewAppData AppData) *fyne.Container {
+func createList(NewAppData *src.AppData) *fyne.Container {
 	listContainer := container.NewVBox()
-	for i := 0; i < len(NewAppData.newCellList); i++ {
-		containerListElement := elem.CreateListElement(NewAppData.newCellList[i].Label, NewAppData.newCellList[i].Login, NewAppData.newCellList[i].Pass, *&NewAppData.mainWindow, NewAppData.entryCode.Text)
+	for i := 0; i < len(NewAppData.CellList); i++ {
+		containerListElement := elem.CreateListElement(NewAppData.CellList[i].Label, NewAppData.CellList[i].Login, NewAppData.CellList[i].Pass, NewAppData.GetWindow(), NewAppData.GetEntryCode().Text)
 		listContainer.Add(containerListElement)
 	}
 	return listContainer
 }
 
-func createNewCellList(NewAppData AppData) {
+func createNewCellList(NewAppData *src.AppData) {
 	newCell := cell.CreateNewCell()
 
 	sendBtn := elem.NewButton("Save Data", func() { setDataFromDialogCell(newCell, NewAppData) })
 
 	dialogContainer := container.NewVBox(newCell.GetLabel(), newCell.GetLogin(), newCell.GetPass(), sendBtn)
 
-	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Send", dialogContainer, NewAppData.mainWindow)
+	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Send", dialogContainer, NewAppData.GetWindow())
 }
 
-func setDataFromDialogCell(newCell *cell.Cell, NewAppData AppData) {
-	newCellData := CellData{}
+func setDataFromDialogCell(newCell *cell.Cell, NewAppData *src.AppData) {
+	newCellData := src.NewCellData()
 
 	newCellData.Label = newCell.GetLabel().Text
 	newCellData.Login = newCell.GetLogin().Text
 	newCellData.Pass = newCell.GetPass().Text
 
-	NewAppData.newCellList = append(NewAppData.newCellList, newCellData)
+	NewAppData.CellList = append(NewAppData.CellList, *newCellData)
 
-	fmt.Println(NewAppData.newCellList)
+	NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
+
+	fmt.Println(NewAppData.CellList)
 }
 
-func saveFile(NewCellList []CellData, w fyne.Window) {
-	code, err := json.Marshal(NewCellList)
+func saveFile(NewAppData *src.AppData) {
+	code, err := json.Marshal(NewAppData.CellList)
 	if err != nil {
 		fmt.Println("Error", err)
 	}
-	fmt.Println(NewCellList)
-	fmt.Println(string(code))
 
 	dialog.ShowFileSave(
 		func(uc fyne.URIWriteCloser, err error) {
 			if uc != nil {
 				io.WriteString(uc, string(code))
+				NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
 			} else {
 				return
 			}
-		}, w,
+		}, NewAppData.GetWindow(),
 	)
 }
 
-func openFile(NewAppData AppData) {
+func openFile(NewAppData *src.AppData) {
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
 				data, _ := io.ReadAll(uc)
-				err := json.Unmarshal(data, &NewAppData.newCellList)
+				err := json.Unmarshal(data, &NewAppData.CellList)
 				if err != nil {
 					panic(err)
 				}
 
-				NewAppData.canvas.SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
+				NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
 
 			} else {
 				return
 			}
-		}, NewAppData.mainWindow,
+		}, NewAppData.GetWindow(),
 	)
 }
 
