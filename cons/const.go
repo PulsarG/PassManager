@@ -10,7 +10,12 @@ const (
 	BTN_LABEL_CREATE_NEW_CELL = "Create New Log-Pass"
 	BTN_LABEL_OPEN            = "Open"
 	BTN_LABEL_SAVE            = "Save"
+	ENTER_KEY_PLACEHOLDER     = "Enter Key-Code"
 
+	FORM_LABEL_NAME        = "Enter Name"
+	FORM_LABEL_LOGIN       = "Enter Login"
+	FORM_LABEL_PASS        = "Enter Password"
+	
 	BTN_LABEL_COPY_LOGIN   = "Copy Login"
 	BTN_LABEL_COPY_PASS    = "Copy Password"
 	BTN_LABEL_SHOW_LOGPASS = "Show/Hide Login-Password"

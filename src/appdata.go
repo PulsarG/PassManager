@@ -17,11 +17,11 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-type CellData struct {
+/* type CellData struct {
 	Label string
 	Login string
 	Pass  string
-}
+} */
 
 type AppData struct {
 	app        fyne.App
@@ -56,6 +56,6 @@ func (a *AppData) GetEntryCode() *widget.Entry {
 	return &a.entryCode
 }
 
-func NewCellData() *CellData {
+/* func NewCellData() *CellData {
 	return &CellData{}
-}
+} */

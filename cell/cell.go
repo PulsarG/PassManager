@@ -2,7 +2,7 @@ package cell
 
 import (
 	"PassManager/cons"
-	
+
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -10,6 +10,10 @@ type Cell struct {
 	label widget.Entry
 	login widget.Entry
 	pass  widget.Entry
+
+	/* Label string
+	Login string
+	Pass  string */
 }
 
 func CreateNewCell() *Cell {

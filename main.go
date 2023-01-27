@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"image/color"
 	"io"
 
 	"PassManager/cell"
@@ -12,16 +13,12 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	/* "fyne.io/fyne/v2/canvas" */
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	/* "fyne.io/fyne/v2/widget" */)
-
-/* type CellData struct {
-	Label string
-	Login string
-	Pass  string
-} */
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
+)
 
 func main() {
 
@@ -39,36 +36,44 @@ func main() {
 }
 
 func createMangerBtns(NewAppData *src.AppData) *fyne.Container {
-	NewAppData.GetEntryCode().PlaceHolder = "Enter KeyCode"
-	containerAddandKey := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_CREATE_NEW_CELL, func() {
-		createNewCellList(NewAppData)
-	}), NewAppData.GetEntryCode())
-	containerOpenSaveBtn := container.NewGridWithColumns(2, elem.NewButton(cons.BTN_LABEL_OPEN, func() {
-		openFile(NewAppData)
-	}), elem.NewButton(cons.BTN_LABEL_SAVE, func() {
-		saveFile(NewAppData)
-	}))
+	NewAppData.GetEntryCode().PlaceHolder = cons.ENTER_KEY_PLACEHOLDER
+
+	btnCreateCell := createColorBtn(cons.BTN_LABEL_CREATE_NEW_CELL, NewAppData, func() { createNewCellList(NewAppData) })
+	btnOpen := createColorBtn(cons.BTN_LABEL_OPEN, NewAppData, func() { openFile(NewAppData) })
+	btnSave := createColorBtn(cons.BTN_LABEL_SAVE, NewAppData, func() { saveFile(NewAppData) })
+
+	containerAddandKey := container.NewGridWithColumns(2, btnCreateCell, NewAppData.GetEntryCode())
+
+	containerOpenSaveBtn := container.NewGridWithColumns(2, btnOpen, btnSave)
 	containerManager := container.NewGridWithRows(2, containerAddandKey, containerOpenSaveBtn)
 	return containerManager
 }
 
-func createList(NewAppData *src.AppData) *fyne.Container {
-	listContainer := container.NewVBox()
-	for i := 0; i < len(NewAppData.CellList); i++ {
-		containerListElement := elem.CreateListElement(NewAppData.CellList[i].Label, NewAppData.CellList[i].Login, NewAppData.CellList[i].Pass, NewAppData.GetWindow(), NewAppData.GetEntryCode().Text)
-		listContainer.Add(containerListElement)
-	}
-	return listContainer
+func createColorBtn(label string, NewAppData *src.AppData, f func()) *fyne.Container {
+	btnCreate := elem.NewButton(label, f)
+	color := color.RGBA{11, 78, 150, 1}
+	btn := container.New(
+		layout.NewMaxLayout(),
+		btnCreate,
+		canvas.NewRectangle(color),
+	)
+	return container.NewWithoutLayout(btn)
 }
 
 func createNewCellList(NewAppData *src.AppData) {
 	newCell := cell.CreateNewCell()
 
-	sendBtn := elem.NewButton("Save Data", func() { setDataFromDialogCell(newCell, NewAppData) })
+	form := widget.NewForm(
+		widget.NewFormItem(cons.FORM_LABEL_NAME, newCell.GetLabel()),
+		widget.NewFormItem(cons.FORM_LABEL_LOGIN, newCell.GetLogin()),
+		widget.NewFormItem(cons.FORM_LABEL_PASS, newCell.GetPass()),
+	)
 
-	dialogContainer := container.NewVBox(newCell.GetLabel(), newCell.GetLogin(), newCell.GetPass(), sendBtn)
+	form.OnSubmit = func() {
+		setDataFromDialogCell(newCell, NewAppData)
+	}
 
-	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Send", dialogContainer, NewAppData.GetWindow())
+	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Close", form, NewAppData.GetWindow())
 }
 
 func setDataFromDialogCell(newCell *cell.Cell, NewAppData *src.AppData) {
@@ -80,7 +85,7 @@ func setDataFromDialogCell(newCell *cell.Cell, NewAppData *src.AppData) {
 
 	NewAppData.CellList = append(NewAppData.CellList, *newCellData)
 
-	NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
+	NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), elem.CreateList(NewAppData)))
 
 	fmt.Println(NewAppData.CellList)
 }
@@ -95,7 +100,7 @@ func saveFile(NewAppData *src.AppData) {
 		func(uc fyne.URIWriteCloser, err error) {
 			if uc != nil {
 				io.WriteString(uc, string(code))
-				NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
+				NewAppData.GetCanvas().SetContent(container.NewVBox(createMangerBtns(NewAppData), elem.CreateList(NewAppData)))
 			} else {
 				return
 			}
@@ -112,8 +117,8 @@ func openFile(NewAppData *src.AppData) {
 				if err != nil {
 					panic(err)
 				}
-
-				NewAppData.GetCanvas().SetContent(container.NewVSplit(createMangerBtns(NewAppData), createList(NewAppData)))
+			
+				NewAppData.GetCanvas().SetContent(container.NewVBox(createMangerBtns(NewAppData), elem.CreateList(NewAppData)))
 
 			} else {
 				return
@@ -121,19 +126,3 @@ func openFile(NewAppData *src.AppData) {
 		}, NewAppData.GetWindow(),
 	)
 }
-
-/* Старт приложения:
-
-Проверка наличия существующего файла
-
-Если файл есть - открытие файла - запрос на загрузку - выбор
-	Парсинг данных из файла в список
-		--- создание виджета списка
-		--- сборка из Лейбла, Кнопок Логин и Пароль, кнопок Показа и Изменения
-	Для добавления нового эелемента постоянная кнопка добавления
-	с Диалоговым окном и и полями Лейбл, Логин, Пасс
-
-Если файла нет - добавления нового эелемента постоянная кнопка добавления
-с Диалоговым окном и и полями Лейбл, Логин, Пасс
-	Внесение в БД
-		Сохранение во внешнем файле */
