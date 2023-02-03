@@ -12,46 +12,66 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	/* "fyne.io/fyne/v2/layout" */)
+
+	"github.com/PulsarG/Enigma"
+)
 
 func createListElement(id int, label, login, pass string, NewAppData *src.AppData) *fyne.Container {
 
-	txtBoundPass := binding.NewString()
-	txtBoundPass.Set(pass)
-	copyBtnPass := widget.NewButtonWithIcon(cons.BTN_LABEL_COPY_PASS, theme.ContentCopyIcon(), func() {
-		if content, err := txtBoundPass.Get(); err == nil { // content - строка, которую надо расшифровать перед копированием или показом
-			NewAppData.GetWindow().Clipboard().SetContent(content)
-		}
-		fmt.Println(NewAppData.GetEntryCode().Text)
-	})
-
-	txtBoundLogin := binding.NewString()
-	txtBoundLogin.Set(login)
-	copyBtnLogin := widget.NewButtonWithIcon(cons.BTN_LABEL_COPY_LOGIN, theme.ContentCopyIcon(), func() {
-		if content, err := txtBoundLogin.Get(); err == nil {
-			NewAppData.GetWindow().Clipboard().SetContent(content)
-		}
-		fmt.Println(NewAppData.GetEntryCode().Text)
-	})
+	copyBtnPass := createBtnWithIcon(NewAppData, pass, cons.BTN_LABEL_COPY_PASS)
+	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN)
 
 	contLabelandChek := container.NewGridWithColumns(3, NewButton("Edit", nil), NewButton("Delete", func() { deleteCell(id, NewAppData) }), NewButton(cons.BTN_LABEL_SHOW_LOGPASS, func() {
-		showPass(copyBtnLogin, copyBtnPass, login, pass)
+		showPass(NewAppData, copyBtnLogin, copyBtnPass, login, pass)
 	}))
 	line := canvas.NewLine(color.Black)
+	line.StrokeWidth = 5
 	contLogPass := container.NewGridWithColumns(2, copyBtnLogin, copyBtnPass)
-	listElementContainer := container.NewVBox(line, widget.NewLabel(label), contLabelandChek, contLogPass)
+
+	nameLabel := widget.NewLabel(label)
+	nameLabel.TextStyle.Bold = true
+	nameLabel.TextStyle.Italic = true
+	cntLabelColor := container.New(
+		layout.NewMaxLayout(),
+		nameLabel,
+		canvas.NewRectangle(color.RGBA{17, 0, 123, 1}),
+	)
+
+	listElementContainer := container.NewVBox(line, cntLabelColor, contLabelandChek, contLogPass)
 
 	return listElementContainer
 }
 
-func showPass(copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
-	if copyBtnLogin.Text == cons.BTN_LABEL_COPY_LOGIN {
-		copyBtnPass.SetText(pass)
-		copyBtnPass.Refresh()
+func createBtnWithIcon(NewAppData *src.AppData, data, name string) *widget.Button {
+	txtBoundPass := binding.NewString()
+	txtBoundPass.Set(data)
+	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
+		if content, err := txtBoundPass.Get(); err == nil { // content - строка, которую надо расшифровать перед копированием или показом
+			toCopy, errEnc := enigma.StartCrypt(content, NewAppData.GetEntryCode().Text)
+			if !errEnc {
+				dialog.ShowCustom("Error", "OK", widget.NewLabel(toCopy), NewAppData.GetWindow())
+				return
+			}
+			NewAppData.GetWindow().Clipboard().SetContent(toCopy)
+			fmt.Println(data, content)
+		}
 
-		copyBtnLogin.SetText(login)
+	})
+	return copyBtn
+}
+
+func showPass(NewAppData *src.AppData, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
+	if copyBtnLogin.Text == cons.BTN_LABEL_COPY_LOGIN {
+		openPass, _ := enigma.StartCrypt(pass, NewAppData.GetEntryCode().Text)
+
+		copyBtnPass.SetText(openPass)
+		copyBtnPass.Refresh()
+		openLogin, _ := enigma.StartCrypt(login, NewAppData.GetEntryCode().Text)
+		copyBtnLogin.SetText(openLogin)
 		copyBtnLogin.Refresh()
 	} else {
 		copyBtnPass.SetText(cons.BTN_LABEL_COPY_PASS)
