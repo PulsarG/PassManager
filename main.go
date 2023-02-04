@@ -25,11 +25,9 @@ import (
 	"github.com/go-ini/ini"
 )
 
-/* var filePath string
-var isSave bool */
+
 
 func main() {
-	/* isSave = false */
 	App := app.New()
 	mainWindow := App.NewWindow(cons.WINDOW_NAME)
 	canvas := mainWindow.Canvas()
@@ -39,7 +37,6 @@ func main() {
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
 	if getFilepathFromIni() != "" {
-		/* openFile(NewAppData) */
 		getDatafromFile(NewAppData)
 	} else {
 		canvas.SetContent(container.NewCenter(createMangerBtns(NewAppData)))
@@ -85,7 +82,17 @@ func createNewCellList(NewAppData *src.AppData) {
 			widget.NewFormItem(cons.FORM_LABEL_PASS, newCell.GetPass()),
 		)
 		comt := container.NewVBox(form, elem.NewButton("random pass", func() {}))
-		dialog.ShowCustomConfirm(cons.DIALOG_CREATE_CELL_NAME, "Add", "Close", comt, func(close bool) { setDataFromDialogCell(newCell, NewAppData) }, NewAppData.GetWindow())
+		dialog.ShowCustomConfirm(cons.DIALOG_CREATE_CELL_NAME,
+			"Add",
+			"Close",
+			comt, func(b bool) {
+				if b {
+					setDataFromDialogCell(newCell, NewAppData)
+				} else {
+					return
+				}
+			},
+			NewAppData.GetWindow())
 	} else {
 		dialog.ShowCustom("Oops", "Ok", widget.NewLabel("Please entry Key-Word"), NewAppData.GetWindow())
 	}
