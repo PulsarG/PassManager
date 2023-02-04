@@ -1,4 +1,4 @@
-package cell
+package src
 
 import (
 	"PassManager/cons"
@@ -10,17 +10,10 @@ type Cell struct {
 	label widget.Entry
 	login widget.Entry
 	pass  widget.Entry
-
-	/* Label string
-	Login string
-	Pass  string */
 }
 
 func CreateNewCell() *Cell {
 	return &Cell{
-		/* Label: *widget.NewEntry(),
-		login: *widget.NewEntry(),
-		pass:  *widget.NewEntry(), */
 	}
 }
 

@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"PassManager/cell"
+	/* 	"PassManager/cell" */
 	"PassManager/cons"
 	"PassManager/elem"
 	"PassManager/src"
@@ -25,11 +25,11 @@ import (
 	"github.com/go-ini/ini"
 )
 
-var filePath string
-var isSave bool
+/* var filePath string
+var isSave bool */
 
 func main() {
-	isSave = false
+	/* isSave = false */
 	App := app.New()
 	mainWindow := App.NewWindow(cons.WINDOW_NAME)
 	canvas := mainWindow.Canvas()
@@ -38,8 +38,9 @@ func main() {
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
-	if isSave {
-		openFile(NewAppData)
+	if getFilepathFromIni() != "" {
+		/* openFile(NewAppData) */
+		getDatafromFile(NewAppData)
 	} else {
 		canvas.SetContent(container.NewCenter(createMangerBtns(NewAppData)))
 	}
@@ -56,8 +57,8 @@ func createMangerBtns(NewAppData *src.AppData) *fyne.Container {
 	containerAddandKey := container.NewGridWithColumns(2, btnCreateCell, NewAppData.GetEntryCode())
 
 	btnOpen := createColorBtn(cons.BTN_LABEL_OPEN, NewAppData, func() { openFile(NewAppData) })
-	btnSave := createColorBtn(cons.BTN_LABEL_SAVE, NewAppData, func() { saveFile(NewAppData) })
-	containerOpenSaveBtn := container.NewGridWithColumns(2, btnOpen, btnSave)
+	/* btnSave := createColorBtn(cons.BTN_LABEL_SAVE, NewAppData, func() { saveFile(NewAppData) }) */
+	containerOpenSaveBtn := container.NewGridWithColumns(1, btnOpen)
 
 	btnOpenCustomRotor := createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, NewAppData, func() {})
 	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, NewAppData, func() {})
@@ -76,24 +77,21 @@ func createColorBtn(label string, NewAppData *src.AppData, f func()) *fyne.Conta
 }
 
 func createNewCellList(NewAppData *src.AppData) {
-	newCell := cell.CreateNewCell()
-
-	form := widget.NewForm(
-		widget.NewFormItem(cons.FORM_LABEL_NAME, newCell.GetLabel()),
-		widget.NewFormItem(cons.FORM_LABEL_LOGIN, newCell.GetLogin()),
-		widget.NewFormItem(cons.FORM_LABEL_PASS, newCell.GetPass()),
-	)
-
-	form.OnSubmit = func() {
-		setDataFromDialogCell(newCell, NewAppData)
+	if NewAppData.GetEntryCode().Text != "" {
+		newCell := src.CreateNewCell()
+		form := widget.NewForm(
+			widget.NewFormItem(cons.FORM_LABEL_NAME, newCell.GetLabel()),
+			widget.NewFormItem(cons.FORM_LABEL_LOGIN, newCell.GetLogin()),
+			widget.NewFormItem(cons.FORM_LABEL_PASS, newCell.GetPass()),
+		)
+		comt := container.NewVBox(form, elem.NewButton("random pass", func() {}))
+		dialog.ShowCustomConfirm(cons.DIALOG_CREATE_CELL_NAME, "Add", "Close", comt, func(close bool) { setDataFromDialogCell(newCell, NewAppData) }, NewAppData.GetWindow())
+	} else {
+		dialog.ShowCustom("Oops", "Ok", widget.NewLabel("Please entry Key-Word"), NewAppData.GetWindow())
 	}
-	form.SubmitText = "Save New Data"
-	comt := container.NewVBox(form, elem.NewButton("random pass", func() {}))
-
-	dialog.ShowCustom(cons.DIALOG_CREATE_CELL_NAME, "Close", comt, NewAppData.GetWindow())
 }
 
-func setDataFromDialogCell(newCell *cell.Cell, NewAppData *src.AppData) {
+func setDataFromDialogCell(newCell *src.Cell, NewAppData *src.AppData) {
 	newCellData := src.NewCellData()
 	var err bool
 
@@ -135,8 +133,8 @@ func saveInFile(NewAppData *src.AppData, code []byte) {
 	defer file.Close()
 	if err != nil {
 		fmt.Printf("1Error opening file: %s\n", err)
-		filePath = ""
-		firstSaveIni()
+		NewAppData.SetFilepath("")
+		firstSaveIni(NewAppData.GetFilepath())
 		dialog.ShowCustom("Not File", "", widget.NewLabel("123"), NewAppData.GetWindow())
 		return
 	} else {
@@ -148,8 +146,8 @@ func createNewFile(NewAppData *src.AppData, code []byte) {
 	dialog.ShowFileSave(
 		func(uc fyne.URIWriteCloser, err error) {
 			if uc != nil {
-				filePath = uc.URI().Path()
-				firstSaveIni()
+				NewAppData.SetFilepath(uc.URI().Path())
+				firstSaveIni(NewAppData.GetFilepath())
 				io.WriteString(uc, string(code))
 				NewAppData.GetCanvas().SetContent(container.NewVBox(createMangerBtns(NewAppData), elem.CreateList(NewAppData)))
 			} else {
@@ -173,18 +171,14 @@ func findFile(NewAppData *src.AppData) {
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
-
-				filePath = uc.URI().Path()
-				firstSaveIni()
-
+				NewAppData.SetFilepath(uc.URI().Path())
+				firstSaveIni(NewAppData.GetFilepath())
 				data, _ := io.ReadAll(uc)
 				err := json.Unmarshal(data, &NewAppData.CellList)
 				if err != nil {
 					panic(err)
 				}
-
 				NewAppData.GetCanvas().SetContent(container.NewVBox(createMangerBtns(NewAppData), elem.CreateList(NewAppData)))
-
 			} else {
 				return
 			}
@@ -196,9 +190,10 @@ func getDatafromFile(NewAppData *src.AppData) {
 	file, err := os.Open(getFilepathFromIni())
 	if err != nil {
 		fmt.Printf("2Error opening file: %s\n", err)
-		filePath = ""
-		firstSaveIni()
-		dialog.ShowCustom("Not File", "", widget.NewLabel("123"), NewAppData.GetWindow())
+		NewAppData.SetFilepath("")
+		firstSaveIni(NewAppData.GetFilepath())
+		dialog.ShowCustom("Not File", "Ok", widget.NewLabel("File not found. Please create new file"), NewAppData.GetWindow())
+		NewAppData.GetCanvas().SetContent(container.NewCenter(createMangerBtns(NewAppData)))
 		return
 	} else {
 		result, _ := ioutil.ReadAll(file)
@@ -218,17 +213,16 @@ func openFile(NewAppData *src.AppData) {
 	} else {
 		getDatafromFile(NewAppData)
 	}
-
 }
 
-func firstSaveIni() {
+func firstSaveIni(path string) {
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
 		fmt.Printf("Error loading config file: %s\n", err)
 		return
 	}
 
-	cfg.Section("file").Key("path").SetValue(filePath)
+	cfg.Section("file").Key("path").SetValue(path)
 
 	err = cfg.SaveTo("config.ini")
 	if err != nil {

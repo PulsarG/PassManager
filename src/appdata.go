@@ -30,6 +30,8 @@ type AppData struct {
 
 	CellList  []CellData
 	entryCode widget.Entry
+
+	filePath string
 }
 
 func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas) *AppData {
@@ -54,6 +56,14 @@ func (a *AppData) GetCanvas() fyne.Canvas {
 
 func (a *AppData) GetEntryCode() *widget.Entry {
 	return &a.entryCode
+}
+
+func (a *AppData) GetFilepath() string {
+	return a.filePath
+}
+
+func (a *AppData) SetFilepath(s string) {
+	a.filePath = s
 }
 
 /* func NewCellData() *CellData {
