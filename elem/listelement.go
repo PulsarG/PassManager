@@ -26,23 +26,27 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 	copyBtnPass := createBtnWithIcon(NewAppData, pass, cons.BTN_LABEL_COPY_PASS)
 	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN)
 
-	contLabelandChek := container.NewGridWithColumns(3, NewButton("Edit", nil), NewButton("Delete", func() { deleteCell(id, NewAppData) }), NewButton(cons.BTN_LABEL_SHOW_LOGPASS, func() {
+	contManageCell := container.NewGridWithColumns(3, NewButton("Edit", nil), NewButton("Delete", func() { deleteCell(id, NewAppData) }), NewButton(cons.BTN_LABEL_SHOW_LOGPASS, func() {
 		showPass(NewAppData, copyBtnLogin, copyBtnPass, login, pass)
 	}))
+
 	line := canvas.NewLine(color.Black)
 	line.StrokeWidth = 5
-	contLogPass := container.NewGridWithColumns(2, copyBtnLogin, copyBtnPass)
 
 	nameLabel := widget.NewLabel(label)
 	nameLabel.TextStyle.Bold = true
 	nameLabel.TextStyle.Italic = true
-	cntLabelColor := container.New(
-		layout.NewMaxLayout(),
-		nameLabel,
-		canvas.NewRectangle(color.RGBA{17, 0, 123, 1}),
+	contNameLogPass := container.NewGridWithColumns(3,
+		container.NewCenter(container.New(
+			layout.NewMaxLayout(),
+			nameLabel,
+			canvas.NewRectangle(color.RGBA{17, 0, 123, 1}),
+		)),
+		copyBtnLogin,
+		copyBtnPass,
 	)
 
-	listElementContainer := container.NewVBox(line, cntLabelColor, contLabelandChek, contLogPass)
+	listElementContainer := container.NewVBox(line, contManageCell, contNameLogPass)
 
 	return listElementContainer
 }
@@ -93,7 +97,6 @@ func CreateList(NewAppData *src.AppData) *fyne.Container {
 }
 
 func deleteCell(id int, NewAppData *src.AppData) {
-
 	NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
-	
+	NewAppData.SetControlLen(len(NewAppData.CellList))
 }
