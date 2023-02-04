@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image/color"
 
+	/* "PassManager/confile" */
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -94,5 +95,5 @@ func CreateList(NewAppData *src.AppData) *fyne.Container {
 func deleteCell(id int, NewAppData *src.AppData) {
 
 	NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
-
+	
 }

@@ -69,3 +69,4 @@ func (a *AppData) SetFilepath(s string) {
 /* func NewCellData() *CellData {
 	return &CellData{}
 } */
+
