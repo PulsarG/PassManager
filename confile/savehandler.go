@@ -9,8 +9,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	/* "PassManager/cons" */
-	"PassManager/elem"
+	/* "PassManager/confile" */
+	/* "PassManager/elem" */
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -43,7 +43,7 @@ func createNewFile(NewAppData *src.AppData, code []byte) {
 				NewAppData.SetFilepath(uc.URI().Path())
 				firstSaveIni(NewAppData.GetFilepath())
 				io.WriteString(uc, string(code))
-				NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), elem.CreateList(NewAppData)))
+				NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
 			} else {
 				return
 			}
@@ -63,6 +63,6 @@ func saveInFile(NewAppData *src.AppData, code []byte) {
 		return
 	} else {
 		ioutil.WriteFile(GetFilepathFromIni(), code, 0644)
-		NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), elem.CreateList(NewAppData)))
+		NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
 	}
 }

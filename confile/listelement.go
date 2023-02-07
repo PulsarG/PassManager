@@ -1,11 +1,13 @@
-package elem
+package confile
 
 import (
 	"PassManager/cons"
 	"fmt"
 	"image/color"
+	"time"
 
 	/* "PassManager/confile" */
+	"PassManager/elem"
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -26,9 +28,14 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 	copyBtnPass := createBtnWithIcon(NewAppData, pass, cons.BTN_LABEL_COPY_PASS)
 	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN)
 
-	contManageCell := container.NewGridWithColumns(3, NewButton("Edit", nil), NewButton("Delete", func() { deleteCell(id, NewAppData) }), NewButton(cons.BTN_LABEL_SHOW_LOGPASS, func() {
-		showPass(NewAppData, copyBtnLogin, copyBtnPass, login, pass)
-	}))
+	contManageCell := container.NewGridWithColumns(3,
+		elem.NewButton("Edit", nil),
+		elem.NewButton("Delete",
+			func() { deleteCell(id, NewAppData) }),
+		elem.NewButton(cons.BTN_LABEL_SHOW_LOGPASS,
+			func() {
+				showPass(NewAppData, copyBtnLogin, copyBtnPass, login, pass)
+			}))
 
 	line := canvas.NewLine(color.Black)
 	line.StrokeWidth = 5
@@ -52,6 +59,7 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 }
 
 func createBtnWithIcon(NewAppData *src.AppData, data, name string) *widget.Button {
+	/* pop := widget.NewPopUp(widget.NewLabel("123"), NewAppData.GetCanvas()) */
 	txtBoundPass := binding.NewString()
 	txtBoundPass.Set(data)
 	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
@@ -62,7 +70,10 @@ func createBtnWithIcon(NewAppData *src.AppData, data, name string) *widget.Butto
 				return
 			}
 			NewAppData.GetWindow().Clipboard().SetContent(toCopy)
-			fmt.Println(data, content)
+			/* pop.Show() */
+			<-time.After(10 * time.Second)
+			fmt.Println("Timer is gone")
+			NewAppData.GetWindow().Clipboard().SetContent("")
 		}
 
 	})
@@ -98,5 +109,6 @@ func CreateList(NewAppData *src.AppData) *fyne.Container {
 
 func deleteCell(id int, NewAppData *src.AppData) {
 	NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
-	NewAppData.SetControlLen(len(NewAppData.CellList))
+	/* NewAppData.SetControlLen(len(NewAppData.CellList)) */
+	SaveFile(NewAppData)
 }

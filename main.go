@@ -1,7 +1,7 @@
 package main
 
 import (
-	"time"
+/* 	"time" */
 
 	"PassManager/confile"
 	"PassManager/cons"
@@ -27,12 +27,12 @@ func main() {
 		canvas.SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
 	}
 
-	go cycleUpdateList(NewAppData)
+	/* go cycleUpdateList(NewAppData) */
 	mainWindow.Show()
 	App.Run()
 }
 
-func cycleUpdateList(NewAppData *src.AppData) {
+/* func cycleUpdateList(NewAppData *src.AppData) {
 	controlLen := NewAppData.GetControlLenList()
 
 	ticker := time.Tick(time.Second)
@@ -42,4 +42,4 @@ func cycleUpdateList(NewAppData *src.AppData) {
 			controlLen = NewAppData.GetControlLenList()
 		}
 	}
-}
+} */

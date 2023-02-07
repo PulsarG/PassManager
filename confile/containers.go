@@ -92,7 +92,7 @@ func setDataFromDialogCell(newCell *src.Cell, NewAppData *src.AppData) {
 
 	NewAppData.CellList = append(NewAppData.CellList, *newCellData)
 
-	NewAppData.GetCanvas().SetContent(container.NewVSplit(CreateMangerBtns(NewAppData), elem.CreateList(NewAppData)))
+	NewAppData.GetCanvas().SetContent(container.NewVSplit(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
 
 	SaveFile(NewAppData)
 	NewAppData.SetControlLen(len(NewAppData.CellList))

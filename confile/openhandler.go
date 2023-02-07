@@ -8,7 +8,7 @@ import (
 	"os"
 	
 	/* "PassManager/cons" */
-	"PassManager/elem"
+/* 	"PassManager/elem" */
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -35,7 +35,7 @@ func findFile(NewAppData *src.AppData) bool {
 				if err != nil {
 					panic(err)
 				}
-				NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), elem.CreateList(NewAppData)))
+				NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
 				isFind = true
 			} else {
 				isFind = false
@@ -59,7 +59,7 @@ func GetDatafromFile(NewAppData *src.AppData) {
 		if err != nil {
 			panic(err)
 		}
-		NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), elem.CreateList(NewAppData)))
+		NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
 
 	}
 	defer file.Close()
