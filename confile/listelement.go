@@ -23,10 +23,13 @@ import (
 	"github.com/PulsarG/Enigma"
 )
 
-func createListElement(id int, label, login, pass string, NewAppData *src.AppData) *fyne.Container {
+var copySec = 10.0
 
-	copyBtnPass := createBtnWithIcon(NewAppData, pass, cons.BTN_LABEL_COPY_PASS)
-	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN)
+func createListElement(id int, label, login, pass string, NewAppData *src.AppData) *fyne.Container {
+	barCopy := widget.NewProgressBar()
+	barCopy.Hide()
+	copyBtnPass := createBtnWithIcon(NewAppData, pass, cons.BTN_LABEL_COPY_PASS, barCopy)
+	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN, barCopy)
 
 	contManageCell := container.NewGridWithColumns(3,
 		elem.NewButton("Edit", nil),
@@ -53,31 +56,56 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 		copyBtnPass,
 	)
 
-	listElementContainer := container.NewVBox(line, contManageCell, contNameLogPass)
+	listElementContainer := container.NewVBox(line, contManageCell, contNameLogPass, barCopy)
 
 	return listElementContainer
 }
 
-func createBtnWithIcon(NewAppData *src.AppData, data, name string) *widget.Button {
-	/* pop := widget.NewPopUp(widget.NewLabel("123"), NewAppData.GetCanvas()) */
+func createBtnWithIcon(NewAppData *src.AppData, data, name string, barCopy *widget.ProgressBar) *widget.Button {
 	txtBoundPass := binding.NewString()
 	txtBoundPass.Set(data)
 	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
-		if content, err := txtBoundPass.Get(); err == nil { // content - строка, которую надо расшифровать перед копированием или показом
-			toCopy, errEnc := enigma.StartCrypt(content, NewAppData.GetEntryCode().Text)
-			if !errEnc {
-				dialog.ShowCustom("Error", "OK", widget.NewLabel(toCopy), NewAppData.GetWindow())
-				return
-			}
-			NewAppData.GetWindow().Clipboard().SetContent(toCopy)
-			/* pop.Show() */
-			<-time.After(10 * time.Second)
-			fmt.Println("Timer is gone")
-			NewAppData.GetWindow().Clipboard().SetContent("")
-		}
-
+		go copyAndBarr(txtBoundPass, NewAppData, barCopy)
 	})
 	return copyBtn
+}
+
+func copyAndBarr(txtBoundPass binding.String, NewAppData *src.AppData, barCopy *widget.ProgressBar) {
+	content, err := txtBoundPass.Get()
+	if err != nil {
+		fmt.Println("Error", err)
+		return
+	}
+
+	toCopy, errEnc := enigma.StartCrypt(content, NewAppData.GetEntryCode().Text)
+	if !errEnc {
+		dialog.ShowCustom("Error", "OK", widget.NewLabel(toCopy), NewAppData.GetWindow())
+		return
+	}
+
+	NewAppData.GetWindow().Clipboard().SetContent(toCopy)
+	progressBarLine(barCopy)
+	<-time.After(time.Duration(copySec) * time.Second)
+	NewAppData.GetWindow().Clipboard().SetContent("")
+}
+
+func progressBarLine(barCopy *widget.ProgressBar) {
+	timeSecond := copySec
+	barCopy.Value = timeSecond
+	barCopy.Min = 0.0
+	barCopy.Max = timeSecond
+	barCopy.Show()
+
+	ticker := time.NewTicker(time.Second)
+	for range ticker.C {
+		timeSecond--
+		fmt.Println("Left ", timeSecond)
+		barCopy.SetValue(timeSecond)
+		if timeSecond == 0.0 {
+			barCopy.Hide()
+			ticker.Stop()
+		}
+	}
 }
 
 func showPass(NewAppData *src.AppData, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
@@ -111,4 +139,10 @@ func deleteCell(id int, NewAppData *src.AppData) {
 	NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
 	/* NewAppData.SetControlLen(len(NewAppData.CellList)) */
 	SaveFile(NewAppData)
+}
+
+func popUpMenu(NewAppData *src.AppData) *widget.PopUpMenu {
+	popMenu := fyne.NewMenu("123", fyne.NewMenuItem("321", func() {}))
+	pop := widget.NewPopUpMenu(popMenu, NewAppData.GetCanvas())
+	return pop
 }

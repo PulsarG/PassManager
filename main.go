@@ -1,8 +1,6 @@
 package main
 
 import (
-/* 	"time" */
-
 	"PassManager/confile"
 	"PassManager/cons"
 	"PassManager/src"
@@ -27,19 +25,6 @@ func main() {
 		canvas.SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
 	}
 
-	/* go cycleUpdateList(NewAppData) */
 	mainWindow.Show()
 	App.Run()
 }
-
-/* func cycleUpdateList(NewAppData *src.AppData) {
-	controlLen := NewAppData.GetControlLenList()
-
-	ticker := time.Tick(time.Second)
-	for range ticker {
-		if len(NewAppData.CellList) != controlLen {
-			confile.SaveFile(NewAppData)
-			controlLen = NewAppData.GetControlLenList()
-		}
-	}
-} */
