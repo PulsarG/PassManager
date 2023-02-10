@@ -24,6 +24,8 @@ import (
 )
 
 var copySec = 10.0
+var bars [1]*widget.ProgressBar
+var tickers [1]*time.Ticker
 
 func createListElement(id int, label, login, pass string, NewAppData *src.AppData) *fyne.Container {
 	barCopy := widget.NewProgressBar()
@@ -65,6 +67,11 @@ func createBtnWithIcon(NewAppData *src.AppData, data, name string, barCopy *widg
 	txtBoundPass := binding.NewString()
 	txtBoundPass.Set(data)
 	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
+		if bars[0] != nil {
+			bars[0].Hide()
+			tickers[0].Stop()
+		}
+		bars[0] = barCopy
 		go copyAndBarr(txtBoundPass, NewAppData, barCopy)
 	})
 	return copyBtn
@@ -96,14 +103,15 @@ func progressBarLine(barCopy *widget.ProgressBar) {
 	barCopy.Max = timeSecond
 	barCopy.Show()
 
-	ticker := time.NewTicker(time.Second)
-	for range ticker.C {
+	/* ticker := time.NewTicker(time.Second) */
+	tickers[0] = time.NewTicker(time.Second)
+	for range tickers[0].C {
 		timeSecond--
 		fmt.Println("Left ", timeSecond)
 		barCopy.SetValue(timeSecond)
 		if timeSecond == 0.0 {
 			barCopy.Hide()
-			ticker.Stop()
+			tickers[0].Stop()
 		}
 	}
 }
