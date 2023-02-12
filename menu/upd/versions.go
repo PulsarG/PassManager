@@ -1,32 +1,33 @@
-package confile
+package upd
 
 import (
 	"fmt"
-	
+
 	"github.com/go-ini/ini"
 )
 
-func GetFilepathFromIni() string {
+func GetVersion() string {
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
 		fmt.Printf("Error loading config file: %s\n", err)
 		return ""
 	}
-	return cfg.Section("file").Key("path").String()
+	return cfg.Section("data").Key("version").String()
 }
 
-func firstSaveIni(path string) {
+func SaveVersion(v string) {
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
 		fmt.Printf("Error loading config file: %s\n", err)
 		return
 	}
 
-	cfg.Section("file").Key("path").SetValue(path)
+	cfg.Section("data").Key("version").SetValue(v)
 
 	err = cfg.SaveTo("config.ini")
 	if err != nil {
 		fmt.Printf("Error saving config file: %s\n", err)
 		return
 	}
+
 }

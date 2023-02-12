@@ -23,10 +23,6 @@ import (
 	"github.com/PulsarG/Enigma"
 )
 
-var copySec = 10.0
-var bars [1]*widget.ProgressBar
-var tickers [1]*time.Ticker
-
 func createListElement(id int, label, login, pass string, NewAppData *src.AppData) *fyne.Container {
 	barCopy := widget.NewProgressBar()
 	barCopy.Hide()
@@ -67,11 +63,11 @@ func createBtnWithIcon(NewAppData *src.AppData, data, name string, barCopy *widg
 	txtBoundPass := binding.NewString()
 	txtBoundPass.Set(data)
 	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
-		if bars[0] != nil {
-			bars[0].Hide()
-			tickers[0].Stop()
+		if NewAppData.GetTicker() != nil && NewAppData.GetBar() != nil {
+			NewAppData.GetBar().Hide()
+			NewAppData.GetTicker().Stop()
 		}
-		bars[0] = barCopy
+		NewAppData.SetBar(barCopy)
 		go copyAndBarr(txtBoundPass, NewAppData, barCopy)
 	})
 	return copyBtn
@@ -91,27 +87,27 @@ func copyAndBarr(txtBoundPass binding.String, NewAppData *src.AppData, barCopy *
 	}
 
 	NewAppData.GetWindow().Clipboard().SetContent(toCopy)
-	progressBarLine(barCopy)
-	<-time.After(time.Duration(copySec) * time.Second)
+	progressBarLine(NewAppData, barCopy)
+	<-time.After(time.Duration(NewAppData.GetCopysec()) * time.Second)
 	NewAppData.GetWindow().Clipboard().SetContent("")
 }
 
-func progressBarLine(barCopy *widget.ProgressBar) {
-	timeSecond := copySec
+func progressBarLine(NewAppData *src.AppData, barCopy *widget.ProgressBar) {
+	timeSecond := NewAppData.GetCopysec()
 	barCopy.Value = timeSecond
 	barCopy.Min = 0.0
 	barCopy.Max = timeSecond
 	barCopy.Show()
 
 	/* ticker := time.NewTicker(time.Second) */
-	tickers[0] = time.NewTicker(time.Second)
-	for range tickers[0].C {
+	NewAppData.SetTicker(time.NewTicker(time.Second))
+	for range NewAppData.GetTicker().C {
 		timeSecond--
 		fmt.Println("Left ", timeSecond)
 		barCopy.SetValue(timeSecond)
 		if timeSecond == 0.0 {
 			barCopy.Hide()
-			tickers[0].Stop()
+			NewAppData.GetTicker().Stop()
 		}
 	}
 }

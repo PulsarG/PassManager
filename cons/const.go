@@ -1,7 +1,9 @@
 package cons
 
+import ()
+
 const (
-	WINDOW_NAME        = "EnigmaPass " + VERSION_APP
+	WINDOW_NAME        = "EnigmaPass "
 	VERSION_APP        = "v 0.9"
 	WINDOW_MAIN_WEIGHT = 500
 	WINDOW_MAIN_HIGHT  = 500
@@ -27,4 +29,11 @@ const (
 	DIALOG_CREATE_LABEL_PLACEHOLDER = "Enter Name"
 	DIALOG_CREATE_LOGIN_PLACEHOLDER = "Enter Login"
 	DIALOG_CREATE_PASS_PLACEHOLDER  = "Enter Password"
+
+	MENU_BTN_LARGECOPY = "Duration of copying"
+	MENU_BTN_ABOUT     = "About"
+
+	SUBMENU_ONE   = "5 sec"
+	SUBMENU_TWO   = "10 sec"
+	SUBMENU_THREE = "15 sec"
 )

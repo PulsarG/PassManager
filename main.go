@@ -3,6 +3,8 @@ package main
 import (
 	"PassManager/confile"
 	"PassManager/cons"
+	"PassManager/menu"
+	"PassManager/menu/upd"
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -11,8 +13,12 @@ import (
 )
 
 func main() {
+	upd.SaveVersion("0.9") // !!!
+
+	nameW := cons.WINDOW_NAME + upd.GetVersion()
+
 	App := app.New()
-	mainWindow := App.NewWindow(cons.WINDOW_NAME)
+	mainWindow := App.NewWindow(nameW)
 	canvas := mainWindow.Canvas()
 
 	NewAppData := src.NewAppData(App, mainWindow, canvas)
@@ -25,6 +31,7 @@ func main() {
 		canvas.SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
 	}
 
+	mainWindow.SetMainMenu(menu.GetMenu(NewAppData))
 	mainWindow.Show()
 	App.Run()
 }

@@ -1,27 +1,10 @@
 package src
 
 import (
-	/* "encoding/json"
-	"fmt"
-	"io"
-
-	"PassManager/cell"
-	"PassManager/cons"
-	"PassManager/elem" */
-
 	"fyne.io/fyne/v2"
-	/* "fyne.io/fyne/v2/app" */
-	/* "fyne.io/fyne/v2/canvas" */
-	/* "fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog" */
 	"fyne.io/fyne/v2/widget"
+	"time"
 )
-
-/* type CellData struct {
-	Label string
-	Login string
-	Pass  string
-} */
 
 type AppData struct {
 	app        fyne.App
@@ -33,6 +16,11 @@ type AppData struct {
 
 	filePath       string
 	controlLenList int
+
+	copySec float64
+
+	timeBar  *widget.ProgressBar
+	timeTick *time.Ticker
 }
 
 func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas) *AppData {
@@ -40,6 +28,7 @@ func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas) *AppData {
 		app:        a,
 		mainWindow: w,
 		canvas:     c,
+		copySec:    10.0,
 	}
 }
 
@@ -81,4 +70,28 @@ func (a *AppData) SetFilepath(s string) {
 
 func (a *AppData) SetControlLen(i int) {
 	a.controlLenList = i
+}
+
+func (a *AppData) GetBar() *widget.ProgressBar {
+	return a.timeBar
+}
+
+func (a *AppData) GetTicker() *time.Ticker {
+	return a.timeTick
+}
+
+func (a *AppData) SetBar(b *widget.ProgressBar) {
+	a.timeBar = b
+}
+
+func (a *AppData) SetTicker(t *time.Ticker) {
+	a.timeTick = t
+}
+
+func (a *AppData) GetCopysec() float64 {
+	return a.copySec
+}
+
+func (a *AppData) SetCopysec(f float64) {
+	a.copySec = f
 }
