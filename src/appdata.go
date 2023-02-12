@@ -1,9 +1,11 @@
 package src
 
 import (
+	/* "PassManager/confile" */
+	"time"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
-	"time"
 )
 
 type AppData struct {
@@ -17,18 +19,18 @@ type AppData struct {
 	filePath       string
 	controlLenList int
 
-	copySec float64
+	copySec int
 
 	timeBar  *widget.ProgressBar
 	timeTick *time.Ticker
 }
 
-func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas) *AppData {
+func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
 	return &AppData{
 		app:        a,
 		mainWindow: w,
 		canvas:     c,
-		copySec:    10.0,
+		copySec:    i,
 	}
 }
 
@@ -88,10 +90,10 @@ func (a *AppData) SetTicker(t *time.Ticker) {
 	a.timeTick = t
 }
 
-func (a *AppData) GetCopysec() float64 {
+func (a *AppData) GetCopysec() int {
 	return a.copySec
 }
 
-func (a *AppData) SetCopysec(f float64) {
-	a.copySec = f
+func (a *AppData) SetCopysec(i int) {
+	a.copySec = i
 }

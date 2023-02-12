@@ -45,18 +45,28 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 	nameLabel.TextStyle.Bold = true
 	nameLabel.TextStyle.Italic = true
 	contNameLogPass := container.NewGridWithColumns(3,
-		container.NewCenter(container.New(
-			layout.NewMaxLayout(),
-			nameLabel,
-			canvas.NewRectangle(color.RGBA{17, 0, 123, 1}),
-		)),
+		/* container.NewCenter(container.New(
+		layout.NewMaxLayout(), */
+		nameLabel,
+		/* canvas.NewRectangle(color.RGBA{17, 0, 123, 1}),
+		)), */
 		copyBtnLogin,
 		copyBtnPass,
 	)
 
 	listElementContainer := container.NewVBox(line, contManageCell, contNameLogPass, barCopy)
 
-	return listElementContainer
+	if id%2 != 0 {
+		return listElementContainer
+	} else {
+		color := color.RGBA{0, 0, 180, 1}
+		listElementContainerColor := container.New(
+			layout.NewMaxLayout(),
+			listElementContainer,
+			canvas.NewRectangle(color),
+		)
+		return listElementContainerColor
+	}
 }
 
 func createBtnWithIcon(NewAppData *src.AppData, data, name string, barCopy *widget.ProgressBar) *widget.Button {
@@ -93,7 +103,7 @@ func copyAndBarr(txtBoundPass binding.String, NewAppData *src.AppData, barCopy *
 }
 
 func progressBarLine(NewAppData *src.AppData, barCopy *widget.ProgressBar) {
-	timeSecond := NewAppData.GetCopysec()
+	timeSecond := float64(NewAppData.GetCopysec())
 	barCopy.Value = timeSecond
 	barCopy.Min = 0.0
 	barCopy.Max = timeSecond

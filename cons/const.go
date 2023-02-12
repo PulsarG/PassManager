@@ -4,7 +4,6 @@ import ()
 
 const (
 	WINDOW_NAME        = "EnigmaPass "
-	VERSION_APP        = "v 0.9"
 	WINDOW_MAIN_WEIGHT = 500
 	WINDOW_MAIN_HIGHT  = 500
 
@@ -23,7 +22,7 @@ const (
 
 	BTN_LABEL_COPY_LOGIN   = "Copy Login"
 	BTN_LABEL_COPY_PASS    = "Copy Password"
-	BTN_LABEL_SHOW_LOGPASS = "Show/Hide Login-Password"
+	BTN_LABEL_SHOW_LOGPASS = "Show"
 
 	DIALOG_CREATE_CELL_NAME         = "Enter New Data"
 	DIALOG_CREATE_LABEL_PLACEHOLDER = "Enter Name"
