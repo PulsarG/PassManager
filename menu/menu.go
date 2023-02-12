@@ -2,6 +2,7 @@ package menu
 
 import (
 	"PassManager/cons"
+	"PassManager/menu/upd"
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -24,7 +25,13 @@ func GetMenu(NewAppData *src.AppData) *fyne.MainMenu {
 }
 
 func showVersionDalog(w fyne.Window) {
-	dialog.ShowCustom("Check Version", "Cancel", widget.NewLabel("Используется актуальная версия"), w)
+	vers := upd.GetVersion()
+	checkVersion := upd.ChekVersion()
+	if vers == checkVersion {
+		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", widget.NewLabel("Используется актуальная версия "+vers), w)
+	} else {
+		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", widget.NewLabel("Данная версия устарела. \n Актуальная версия: "+checkVersion), w)
+	}
 }
 
 func setDurationCopy(NewAppData *src.AppData, f float64) {

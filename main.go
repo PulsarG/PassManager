@@ -13,8 +13,6 @@ import (
 )
 
 func main() {
-	upd.SaveVersion("0.9") // !!!
-
 	nameW := cons.WINDOW_NAME + upd.GetVersion()
 
 	App := app.New()
