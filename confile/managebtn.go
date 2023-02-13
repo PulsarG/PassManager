@@ -1,9 +1,10 @@
 package confile
 
 import (
-	/* "encoding/json"
-	"fmt" */
+	"encoding/json"
+	/* "fmt" */
 	"image/color"
+
 	/* "io"
 	"io/ioutil"
 	"os" */
@@ -35,11 +36,25 @@ func CreateMangerBtns(NewAppData *src.AppData) *fyne.Container {
 	containerOpenSaveBtn := container.NewGridWithColumns(1, btnOpen)
 
 	btnOpenCustomRotor := createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, NewAppData, func() {})
-	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, NewAppData, func() {})
+	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, NewAppData, func() {
+		createSaveNewRotor(NewAppData)
+	})
 	containerCustomRotor := container.NewGridWithColumns(2, btnOpenCustomRotor, btnCreateCustomRotor)
 
 	containerManager := container.NewGridWithRows(3, containerAddandKey, containerOpenSaveBtn, containerCustomRotor)
 	return containerManager
+}
+
+func createSaveNewRotor(NewAppData *src.AppData) {
+	rotor, errRotor := enigma.NewRotor()
+	if !errRotor {
+		dialog.ShowInformation("Error", "Opps, try again", NewAppData.GetWindow())
+	}
+	rotorData, err := json.Marshal(rotor)
+	if err != nil {
+		dialog.ShowInformation("Error", "Opps, try again", NewAppData.GetWindow())
+	}
+	createNewRotorFile(NewAppData, rotorData)
 }
 
 func createColorBtn(label string, NewAppData *src.AppData, f func()) *fyne.Container {

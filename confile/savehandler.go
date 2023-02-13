@@ -49,7 +49,21 @@ func createNewFile(NewAppData *src.AppData, code []byte) {
 			}
 		}, NewAppData.GetWindow(),
 	)
+}
 
+func createNewRotorFile(NewAppData *src.AppData, code []byte) {
+	dialog.ShowFileSave(
+		func(uc fyne.URIWriteCloser, err error) {
+			if uc != nil {
+				NewAppData.SetFilepath(uc.URI().Path())
+				/* firstSaveIni(NewAppData.GetFilepath()) */
+				io.WriteString(uc, string(code))
+				NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
+			} else {
+				return
+			}
+		}, NewAppData.GetWindow(),
+	)
 }
 
 func saveInFile(NewAppData *src.AppData, code []byte) {
@@ -59,7 +73,7 @@ func saveInFile(NewAppData *src.AppData, code []byte) {
 		fmt.Printf("1Error opening file: %s\n", err)
 		NewAppData.SetFilepath("")
 		firstSaveIni(NewAppData.GetFilepath())
-		dialog.ShowCustom("Not File", "", widget.NewLabel("123"), NewAppData.GetWindow())
+		dialog.ShowCustom("Not File", "", widget.NewLabel("File not found"), NewAppData.GetWindow())
 		return
 	} else {
 		ioutil.WriteFile(GetFilepathFromIni(), code, 0644)

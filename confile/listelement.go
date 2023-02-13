@@ -30,7 +30,7 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN, barCopy)
 
 	contManageCell := container.NewGridWithColumns(3,
-		elem.NewButton("Edit", nil),
+		elem.NewButton("Edit", func() { editCellDialog(NewAppData, id) }),
 		elem.NewButton("Delete",
 			func() { deleteCell(id, NewAppData) }),
 		elem.NewButton(cons.BTN_LABEL_SHOW_LOGPASS,
@@ -150,8 +150,51 @@ func CreateList(NewAppData *src.AppData) *fyne.Container {
 }
 
 func deleteCell(id int, NewAppData *src.AppData) {
-	NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
-	/* NewAppData.SetControlLen(len(NewAppData.CellList)) */
+	dialog.ShowConfirm("DELETE?", "REALY?", func(b bool) {
+		if b {
+			NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
+			/* NewAppData.SetControlLen(len(NewAppData.CellList)) */
+			SaveFile(NewAppData)
+		}
+	}, NewAppData.GetWindow())
+}
+
+func editCellDialog(NewAppData *src.AppData, id int) {
+	if NewAppData.GetEntryCode().Text == "" {
+		dialog.ShowInformation("Opps", "Please enter key-word", NewAppData.GetWindow())
+		return
+	} else {
+		var newData [3]widget.Entry
+		newData[0].PlaceHolder = "New Label"
+		newData[1].PlaceHolder = "New Login"
+		newData[2].PlaceHolder = "New Password"
+		forms := container.NewVBox(&newData[0], &newData[1], &newData[2])
+		dialog.ShowCustomConfirm("Edit", "Accept", "Exit", forms, func(b bool) {
+			if b {
+				editCell(id, newData, NewAppData)
+			}
+		}, NewAppData.GetWindow())
+	}
+}
+
+func editCell(id int, newData [3]widget.Entry, NewAppData *src.AppData) {
+	if newData[0].Text != "" {
+		NewAppData.CellList[id].Label = newData[0].Text
+	}
+	if newData[1].Text != "" {
+		s, b := enigma.StartCrypt(newData[1].Text, NewAppData.GetEntryCode().Text)
+		if !b {
+			return
+		}
+		NewAppData.CellList[id].Login = s
+	}
+	if newData[2].Text != "" {
+		s, b := enigma.StartCrypt(newData[2].Text, NewAppData.GetEntryCode().Text)
+		if !b {
+			return
+		}
+		NewAppData.CellList[id].Pass = s
+	}
 	SaveFile(NewAppData)
 }
 
