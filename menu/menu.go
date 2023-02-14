@@ -5,6 +5,7 @@ import (
 	"PassManager/cons"
 	"PassManager/menu/upd"
 	"PassManager/src"
+	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
@@ -19,14 +20,15 @@ func GetMenu(NewAppData *src.AppData) *fyne.MainMenu {
 		fyne.NewMenuItem(cons.SUBMENU_TWO, func() { setDurationCopy(NewAppData, 10) }),
 		fyne.NewMenuItem(cons.SUBMENU_THREE, func() { setDurationCopy(NewAppData, 15) }),
 	)
+	menuBtnNewBase := fyne.NewMenuItem(cons.MENU_BTN_NEWBASE, nil)
 
-	menu := fyne.NewMenu("Menu", menuBtnLargecopy, menuBtnAbout)
+	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, menuBtnAbout)
 	mainMenu := fyne.NewMainMenu(menu)
 	return mainMenu
 }
 
 func showVersionDalog(w fyne.Window) {
-	vers := upd.GetVersion()
+	vers := confile.GetFromIni("data", "version")
 	checkVersion := upd.ChekVersion()
 	if vers == checkVersion {
 		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", widget.NewLabel("Используется актуальная версия "+vers), w)
@@ -37,5 +39,5 @@ func showVersionDalog(w fyne.Window) {
 
 func setDurationCopy(NewAppData *src.AppData, i int) {
 	NewAppData.SetCopysec(i)
-	confile.SaveCopysecIni(i)
+	confile.SaveToIni("data", "duration", strconv.Itoa(i))
 }

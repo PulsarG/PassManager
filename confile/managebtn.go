@@ -2,19 +2,13 @@ package confile
 
 import (
 	"encoding/json"
-	/* "fmt" */
 	"image/color"
-
-	/* "io"
-	"io/ioutil"
-	"os" */
 
 	"PassManager/cons"
 	"PassManager/elem"
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
-	/* "fyne.io/fyne/v2/app" */
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -22,7 +16,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/PulsarG/Enigma"
-	/* 	"github.com/go-ini/ini" */)
+)
 
 func CreateMangerBtns(NewAppData *src.AppData) *fyne.Container {
 	NewAppData.GetEntryCode().PlaceHolder = cons.ENTER_KEY_PLACEHOLDER

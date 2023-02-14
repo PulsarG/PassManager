@@ -6,21 +6,13 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	
-	/* "PassManager/cons" */
-/* 	"PassManager/elem" */
+
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
-/* 	"fyne.io/fyne/v2/app" */
-	/* "fyne.io/fyne/v2/canvas" */
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	/* "fyne.io/fyne/v2/layout" */
 	"fyne.io/fyne/v2/widget"
-
-	// "github.com/PulsarG/Enigma"
-	/* "github.com/go-ini/ini" */
 )
 
 func findFile(NewAppData *src.AppData) bool {
@@ -29,7 +21,7 @@ func findFile(NewAppData *src.AppData) bool {
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
 				NewAppData.SetFilepath(uc.URI().Path())
-				firstSaveIni(NewAppData.GetFilepath())
+				SaveToIni("file", "path", NewAppData.GetFilepath())
 				data, _ := io.ReadAll(uc)
 				err := json.Unmarshal(data, &NewAppData.CellList)
 				if err != nil {
@@ -46,11 +38,11 @@ func findFile(NewAppData *src.AppData) bool {
 }
 
 func GetDatafromFile(NewAppData *src.AppData) {
-	file, err := os.Open(GetFilepathFromIni())
+	file, err := os.Open(GetFromIni("file", "path"))
 	if err != nil {
 		fmt.Printf("2Error opening file: %s\n", err)
 		NewAppData.SetFilepath("")
-		firstSaveIni(NewAppData.GetFilepath())
+		SaveToIni("file", "path", NewAppData.GetFilepath())
 		dialog.ShowCustom("Not File", "Ok", widget.NewLabel("File not found. Please create new file"), NewAppData.GetWindow())
 		NewAppData.GetCanvas().SetContent(container.NewCenter(CreateMangerBtns(NewAppData)))
 	} else {

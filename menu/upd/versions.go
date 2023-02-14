@@ -5,43 +5,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/go-ini/ini"
-)
+	
+	"PassManager/cons"
+	)
 
 type Release struct {
 	TagName string `json:"tag_name"`
 }
 
-func GetVersion() string {
-	cfg, err := ini.Load("config.ini")
-	if err != nil {
-		fmt.Printf("Error loading config file: %s\n", err)
-		return ""
-	}
-	return cfg.Section("data").Key("version").String()
-}
-
-func SaveVersion(v string) {
-	cfg, err := ini.Load("config.ini")
-	if err != nil {
-		fmt.Printf("Error loading config file: %s\n", err)
-		return
-	}
-
-	cfg.Section("data").Key("version").SetValue(v)
-
-	err = cfg.SaveTo("config.ini")
-	if err != nil {
-		fmt.Printf("Error saving config file: %s\n", err)
-		return
-	}
-
-}
-
 func ChekVersion() string {
-	url := "https://api.github.com/repos/PulsarG/PassManager/releases/latest"
-	response, err := http.Get(url)
+	response, err := http.Get(cons.URL_LATEST_VERSION)
 	if err != nil {
 		fmt.Println("Error checking for updates:", err)
 		return ""

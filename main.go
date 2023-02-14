@@ -4,8 +4,8 @@ import (
 	"PassManager/confile"
 	"PassManager/cons"
 	"PassManager/menu"
-	"PassManager/menu/upd"
 	"PassManager/src"
+	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -14,21 +14,23 @@ import (
 
 func main() {
 	App := app.New()
-	mainWindow := App.NewWindow(cons.WINDOW_NAME + upd.GetVersion())
-	canvas := mainWindow.Canvas()
-
-	NewAppData := src.NewAppData(App, mainWindow, canvas, confile.GetCopysecIni())
-
+	mainWindow := App.NewWindow(cons.WINDOW_NAME + confile.GetFromIni("data", "version"))
+	duration, _ := strconv.Atoi(confile.GetFromIni("data", "duration"))
+	NewAppData := src.NewAppData(App, mainWindow, mainWindow.Canvas(), duration)
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
-	if confile.GetFilepathFromIni() != "" {
-		confile.GetDatafromFile(NewAppData)
-	} else {
-		canvas.SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
-	}
+	selectWindowContent(NewAppData)
 
 	// App.Settings().SetTheme(theme.DarkTheme())
 	mainWindow.SetMainMenu(menu.GetMenu(NewAppData))
 	mainWindow.Show()
 	App.Run()
+}
+
+func selectWindowContent(NewAppData *src.AppData) {
+	if confile.GetFromIni("file", "path") != "" {
+		confile.GetDatafromFile(NewAppData)
+	} else {
+		NewAppData.GetCanvas().SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
+	}
 }
