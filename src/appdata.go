@@ -13,7 +13,7 @@ type AppData struct {
 	mainWindow fyne.Window
 	canvas     fyne.Canvas
 
-	CellList  []CellData
+	cellList  []CellData
 	entryCode widget.Entry
 
 	filePath       string
@@ -50,30 +50,22 @@ func (a *AppData) GetEntryCode() *widget.Entry {
 	return &a.entryCode
 }
 
-func (a *AppData) GetFilepath() string {
-	return a.filePath
-}
-
 func (a *AppData) GetControlLenList() int {
 	return a.controlLenList
 }
 
-/* func (a *AppData) GetCellList() []CellData {
-	return a.cellList
+//
+// File path
+func (a *AppData) GetFilepath() string {
+	return a.filePath
 }
-
-func (a *AppData) SetCellList(list []CellData) {
-	a.cellList = list
-} */
 
 func (a *AppData) SetFilepath(s string) {
 	a.filePath = s
 }
 
-func (a *AppData) SetControlLen(i int) {
-	a.controlLenList = i
-}
-
+//
+// Ticker and Bar
 func (a *AppData) GetBar() *widget.ProgressBar {
 	return a.timeBar
 }
@@ -90,10 +82,30 @@ func (a *AppData) SetTicker(t *time.Ticker) {
 	a.timeTick = t
 }
 
+//
+// CopySec 
 func (a *AppData) GetCopysec() int {
 	return a.copySec
 }
 
 func (a *AppData) SetCopysec(i int) {
 	a.copySec = i
+}
+
+//
+// Cell List
+func (a *AppData) GetCellList() []CellData {
+	return a.cellList
+}
+
+func (a *AppData) SetCellListAppend(newCellData CellData) {
+	a.cellList = append(a.cellList, newCellData)
+}
+
+func (a *AppData) SetDeleteCell(id int) {
+	a.cellList = append(a.cellList[:id], a.cellList[id+1:]...)
+}
+
+func (a *AppData) SetCellList(list []CellData) {
+	a.cellList = list
 }

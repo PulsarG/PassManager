@@ -8,7 +8,7 @@ import (
 
 	/* "PassManager/confile" */
 	"PassManager/elem"
-	"PassManager/src"
+	/* "PassManager/src" */
 
 	"fyne.io/fyne/v2"
 	/* 	"fyne.io/fyne/v2/app" */
@@ -23,19 +23,19 @@ import (
 	"github.com/PulsarG/Enigma"
 )
 
-func createListElement(id int, label, login, pass string, NewAppData *src.AppData) *fyne.Container {
+func createListElement(id int, label, login, pass string, iface InfaceApp) *fyne.Container {
 	barCopy := widget.NewProgressBar()
 	barCopy.Hide()
-	copyBtnPass := createBtnWithIcon(NewAppData, pass, cons.BTN_LABEL_COPY_PASS, barCopy)
-	copyBtnLogin := createBtnWithIcon(NewAppData, login, cons.BTN_LABEL_COPY_LOGIN, barCopy)
+	copyBtnPass := createBtnWithIcon(iface, pass, cons.BTN_LABEL_COPY_PASS, barCopy)
+	copyBtnLogin := createBtnWithIcon(iface, login, cons.BTN_LABEL_COPY_LOGIN, barCopy)
 
 	contManageCell := container.NewGridWithColumns(3,
-		elem.NewButton("Edit", func() { editCellDialog(NewAppData, id) }),
+		elem.NewButton("Edit", func() { editCellDialog(iface, id) }),
 		elem.NewButton("Delete",
-			func() { deleteCell(id, NewAppData) }),
+			func() { deleteCell(id, iface) }),
 		elem.NewButton(cons.BTN_LABEL_SHOW_LOGPASS,
 			func() {
-				showPass(NewAppData, copyBtnLogin, copyBtnPass, login, pass)
+				showPass(iface, copyBtnLogin, copyBtnPass, login, pass)
 			}))
 
 	line := canvas.NewLine(color.Black)
@@ -69,66 +69,66 @@ func createListElement(id int, label, login, pass string, NewAppData *src.AppDat
 	}
 }
 
-func createBtnWithIcon(NewAppData *src.AppData, data, name string, barCopy *widget.ProgressBar) *widget.Button {
+func createBtnWithIcon(iface InfaceApp, data, name string, barCopy *widget.ProgressBar) *widget.Button {
 	txtBoundPass := binding.NewString()
 	txtBoundPass.Set(data)
 	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
-		if NewAppData.GetTicker() != nil && NewAppData.GetBar() != nil {
-			NewAppData.GetBar().Hide()
-			NewAppData.GetTicker().Stop()
+		if iface.GetTicker() != nil && iface.GetBar() != nil {
+			iface.GetBar().Hide()
+			iface.GetTicker().Stop()
 		}
-		NewAppData.SetBar(barCopy)
-		go copyAndBarr(txtBoundPass, NewAppData, barCopy)
+		iface.SetBar(barCopy)
+		go copyAndBarr(txtBoundPass, iface, barCopy)
 	})
 	return copyBtn
 }
 
-func copyAndBarr(txtBoundPass binding.String, NewAppData *src.AppData, barCopy *widget.ProgressBar) {
+func copyAndBarr(txtBoundPass binding.String, iface InfaceApp, barCopy *widget.ProgressBar) {
 	content, err := txtBoundPass.Get()
 	if err != nil {
 		fmt.Println("Error", err)
 		return
 	}
 
-	toCopy, errEnc := enigma.StartCrypt(content, NewAppData.GetEntryCode().Text)
+	toCopy, errEnc := enigma.StartCrypt(content, iface.GetEntryCode().Text)
 	if !errEnc {
-		dialog.ShowCustom("Error", "OK", widget.NewLabel(toCopy), NewAppData.GetWindow())
+		dialog.ShowCustom("Error", "OK", widget.NewLabel(toCopy), iface.GetWindow())
 		return
 	}
 
-	NewAppData.GetWindow().Clipboard().SetContent(toCopy)
-	progressBarLine(NewAppData, barCopy)
-	<-time.After(time.Duration(NewAppData.GetCopysec()) * time.Second)
-	NewAppData.GetWindow().Clipboard().SetContent("")
+	iface.GetWindow().Clipboard().SetContent(toCopy)
+	progressBarLine(iface, barCopy)
+	<-time.After(time.Duration(iface.GetCopysec()) * time.Second)
+	iface.GetWindow().Clipboard().SetContent("")
 }
 
-func progressBarLine(NewAppData *src.AppData, barCopy *widget.ProgressBar) {
-	timeSecond := float64(NewAppData.GetCopysec())
+func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
+	timeSecond := float64(iface.GetCopysec())
 	barCopy.Value = timeSecond
 	barCopy.Min = 0.0
 	barCopy.Max = timeSecond
 	barCopy.Show()
 
 	/* ticker := time.NewTicker(time.Second) */
-	NewAppData.SetTicker(time.NewTicker(time.Second))
-	for range NewAppData.GetTicker().C {
+	iface.SetTicker(time.NewTicker(time.Second))
+	for range iface.GetTicker().C {
 		timeSecond--
 		fmt.Println("Left ", timeSecond)
 		barCopy.SetValue(timeSecond)
 		if timeSecond == 0.0 {
 			barCopy.Hide()
-			NewAppData.GetTicker().Stop()
+			iface.GetTicker().Stop()
 		}
 	}
 }
 
-func showPass(NewAppData *src.AppData, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
+func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
 	if copyBtnLogin.Text == cons.BTN_LABEL_COPY_LOGIN {
-		openPass, _ := enigma.StartCrypt(pass, NewAppData.GetEntryCode().Text)
+		openPass, _ := enigma.StartCrypt(pass, iface.GetEntryCode().Text)
 
 		copyBtnPass.SetText(openPass)
 		copyBtnPass.Refresh()
-		openLogin, _ := enigma.StartCrypt(login, NewAppData.GetEntryCode().Text)
+		openLogin, _ := enigma.StartCrypt(login, iface.GetEntryCode().Text)
 		copyBtnLogin.SetText(openLogin)
 		copyBtnLogin.Refresh()
 	} else {
@@ -140,28 +140,28 @@ func showPass(NewAppData *src.AppData, copyBtnLogin *widget.Button, copyBtnPass 
 	}
 }
 
-func CreateList(NewAppData *src.AppData) *fyne.Container {
+func CreateList(iface InfaceApp) *fyne.Container {
 	listContainer := container.NewVBox()
-	for i := 0; i < len(NewAppData.CellList); i++ {
-		containerListElement := createListElement(i, NewAppData.CellList[i].Label, NewAppData.CellList[i].Login, NewAppData.CellList[i].Pass, NewAppData)
+	for i := 0; i < len(iface.GetCellList()); i++ {
+		containerListElement := createListElement(i, iface.GetCellList()[i].Label, iface.GetCellList()[i].Login, iface.GetCellList()[i].Pass, iface)
 		listContainer.Add(containerListElement)
 	}
 	return listContainer
 }
 
-func deleteCell(id int, NewAppData *src.AppData) {
+func deleteCell(id int, iface InfaceApp) {
 	dialog.ShowConfirm("DELETE?", "REALY?", func(b bool) {
 		if b {
-			NewAppData.CellList = append(NewAppData.CellList[:id], NewAppData.CellList[id+1:]...)
-			/* NewAppData.SetControlLen(len(NewAppData.CellList)) */
-			SaveFile(NewAppData)
+			iface.SetDeleteCell(id)
+			/* iface.SetControlLen(len(iface.CellList)) */
+			SaveFile(iface)
 		}
-	}, NewAppData.GetWindow())
+	}, iface.GetWindow())
 }
 
-func editCellDialog(NewAppData *src.AppData, id int) {
-	if NewAppData.GetEntryCode().Text == "" {
-		dialog.ShowInformation("Opps", "Please enter key-word", NewAppData.GetWindow())
+func editCellDialog(iface InfaceApp, id int) {
+	if iface.GetEntryCode().Text == "" {
+		dialog.ShowInformation("Opps", "Please enter key-word", iface.GetWindow())
 		return
 	} else {
 		var newData [3]widget.Entry
@@ -171,35 +171,35 @@ func editCellDialog(NewAppData *src.AppData, id int) {
 		forms := container.NewVBox(&newData[0], &newData[1], &newData[2])
 		dialog.ShowCustomConfirm("Edit", "Accept", "Exit", forms, func(b bool) {
 			if b {
-				editCell(id, newData, NewAppData)
+				editCell(id, newData, iface)
 			}
-		}, NewAppData.GetWindow())
+		}, iface.GetWindow())
 	}
 }
 
-func editCell(id int, newData [3]widget.Entry, NewAppData *src.AppData) {
+func editCell(id int, newData [3]widget.Entry, iface InfaceApp) {
 	if newData[0].Text != "" {
-		NewAppData.CellList[id].Label = newData[0].Text
+		iface.GetCellList()[id].Label = newData[0].Text
 	}
 	if newData[1].Text != "" {
-		s, b := enigma.StartCrypt(newData[1].Text, NewAppData.GetEntryCode().Text)
+		s, b := enigma.StartCrypt(newData[1].Text, iface.GetEntryCode().Text)
 		if !b {
 			return
 		}
-		NewAppData.CellList[id].Login = s
+		iface.GetCellList()[id].Login = s
 	}
 	if newData[2].Text != "" {
-		s, b := enigma.StartCrypt(newData[2].Text, NewAppData.GetEntryCode().Text)
+		s, b := enigma.StartCrypt(newData[2].Text, iface.GetEntryCode().Text)
 		if !b {
 			return
 		}
-		NewAppData.CellList[id].Pass = s
+		iface.GetCellList()[id].Pass = s
 	}
-	SaveFile(NewAppData)
+	SaveFile(iface)
 }
 
-func popUpMenu(NewAppData *src.AppData) *widget.PopUpMenu {
+func popUpMenu(iface InfaceApp) *widget.PopUpMenu {
 	popMenu := fyne.NewMenu("123", fyne.NewMenuItem("321", func() {}))
-	pop := widget.NewPopUpMenu(popMenu, NewAppData.GetCanvas())
+	pop := widget.NewPopUpMenu(popMenu, iface.GetCanvas())
 	return pop
 }

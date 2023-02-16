@@ -18,20 +18,20 @@ import (
 	"github.com/PulsarG/Enigma"
 )
 
-func CreateMangerBtns(NewAppData *src.AppData) *fyne.Container {
-	NewAppData.GetEntryCode().PlaceHolder = cons.ENTER_KEY_PLACEHOLDER
+func CreateMangerBtns(iface InfaceApp) *fyne.Container {
+	iface.GetEntryCode().PlaceHolder = cons.ENTER_KEY_PLACEHOLDER
 
-	btnCreateCell := createColorBtn(cons.BTN_LABEL_CREATE_NEW_CELL, NewAppData, func() { createNewCellList(NewAppData) })
+	btnCreateCell := createColorBtn(cons.BTN_LABEL_CREATE_NEW_CELL, iface, func() { createNewCellList(iface) })
 
-	containerAddandKey := container.NewGridWithColumns(2, btnCreateCell, NewAppData.GetEntryCode())
+	containerAddandKey := container.NewGridWithColumns(2, btnCreateCell, iface.GetEntryCode())
 
-	btnOpen := createColorBtn(cons.BTN_LABEL_OPEN, NewAppData, func() { OpenFile(NewAppData) })
-	/* btnSave := createColorBtn(cons.BTN_LABEL_SAVE, NewAppData, func() { saveFile(NewAppData) }) */
+	btnOpen := createColorBtn(cons.BTN_LABEL_OPEN, iface, func() { OpenFile(iface) })
+	/* btnSave := createColorBtn(cons.BTN_LABEL_SAVE, iface, func() { saveFile(iface) }) */
 	containerOpenSaveBtn := container.NewGridWithColumns(1, btnOpen)
 
-	btnOpenCustomRotor := createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, NewAppData, func() {})
-	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, NewAppData, func() {
-		createSaveNewRotor(NewAppData)
+	btnOpenCustomRotor := createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, iface, func() {})
+	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, iface, func() {
+		createSaveNewRotor(iface)
 	})
 	containerCustomRotor := container.NewGridWithColumns(2, btnOpenCustomRotor, btnCreateCustomRotor)
 
@@ -39,27 +39,27 @@ func CreateMangerBtns(NewAppData *src.AppData) *fyne.Container {
 	return containerManager
 }
 
-func createSaveNewRotor(NewAppData *src.AppData) {
+func createSaveNewRotor(iface InfaceApp) {
 	rotor, errRotor := enigma.NewRotor()
 	if !errRotor {
-		dialog.ShowInformation("Error", "Opps, try again", NewAppData.GetWindow())
+		dialog.ShowInformation("Error", "Opps, try again", iface.GetWindow())
 	}
 	rotorData, err := json.Marshal(rotor)
 	if err != nil {
-		dialog.ShowInformation("Error", "Opps, try again", NewAppData.GetWindow())
+		dialog.ShowInformation("Error", "Opps, try again", iface.GetWindow())
 	}
-	createNewRotorFile(NewAppData, rotorData)
+	createNewRotorFile(iface, rotorData)
 }
 
-func createColorBtn(label string, NewAppData *src.AppData, f func()) *fyne.Container {
+func createColorBtn(label string, iface InfaceApp, f func()) *fyne.Container {
 	return container.New(
 		layout.NewMaxLayout(),
 		canvas.NewRectangle(color.NRGBA{R: 11, G: 78, B: 150, A: 1}),
 		elem.NewButton(label, f),
 	)
 }
-func createNewCellList(NewAppData *src.AppData) {
-	if NewAppData.GetEntryCode().Text != "" {
+func createNewCellList(iface InfaceApp) {
+	if iface.GetEntryCode().Text != "" {
 		newCell := src.CreateNewCell()
 		form := widget.NewForm(
 			widget.NewFormItem(cons.FORM_LABEL_NAME, newCell.GetLabel()),
@@ -72,37 +72,37 @@ func createNewCellList(NewAppData *src.AppData) {
 			"Close",
 			comt, func(b bool) {
 				if b {
-					setDataFromDialogCell(newCell, NewAppData)
+					setDataFromDialogCell(newCell, iface)
 				} else {
 					return
 				}
 			},
-			NewAppData.GetWindow())
+			iface.GetWindow())
 	} else {
-		dialog.ShowCustom("Oops", "Ok", widget.NewLabel("Please entry Key-Word"), NewAppData.GetWindow())
+		dialog.ShowCustom("Oops", "Ok", widget.NewLabel("Please entry Key-Word"), iface.GetWindow())
 	}
 }
 
-func setDataFromDialogCell(newCell *src.Cell, NewAppData *src.AppData) {
+func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp) {
 	newCellData := src.NewCellData()
 	var err bool
 
 	newCellData.Label = newCell.GetLabel().Text
-	newCellData.Login, err = enigma.StartCrypt(newCell.GetLogin().Text, NewAppData.GetEntryCode().Text)
+	newCellData.Login, err = enigma.StartCrypt(newCell.GetLogin().Text, iface.GetEntryCode().Text)
 	if !err {
-		dialog.ShowCustom("Error", "OK", widget.NewLabel(newCellData.Login), NewAppData.GetWindow())
+		dialog.ShowCustom("Error", "OK", widget.NewLabel(newCellData.Login), iface.GetWindow())
 		return
 	}
-	newCellData.Pass, err = enigma.StartCrypt(newCell.GetPass().Text, NewAppData.GetEntryCode().Text)
+	newCellData.Pass, err = enigma.StartCrypt(newCell.GetPass().Text, iface.GetEntryCode().Text)
 	if !err {
-		dialog.ShowCustom("Error", "OK", widget.NewLabel(newCellData.Pass), NewAppData.GetWindow())
+		dialog.ShowCustom("Error", "OK", widget.NewLabel(newCellData.Pass), iface.GetWindow())
 		return
 	}
 
-	NewAppData.CellList = append(NewAppData.CellList, *newCellData)
+	iface.SetCellListAppend(*newCellData)
 
-	NewAppData.GetCanvas().SetContent(container.NewVSplit(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
+	iface.GetCanvas().SetContent(container.NewVSplit(CreateMangerBtns(iface), CreateList(iface)))
 
-	SaveFile(NewAppData)
-	NewAppData.SetControlLen(len(NewAppData.CellList))
+	SaveFile(iface)
+	/* iface.SetControlLen(len(iface.GetCellList())) */
 }

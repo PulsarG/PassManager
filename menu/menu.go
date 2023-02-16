@@ -4,7 +4,7 @@ import (
 	"PassManager/confile"
 	"PassManager/cons"
 	"PassManager/menu/upd"
-	"PassManager/src"
+	/* "PassManager/src" */
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -12,13 +12,18 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func GetMenu(NewAppData *src.AppData) *fyne.MainMenu {
-	menuBtnAbout := fyne.NewMenuItem(cons.MENU_BTN_ABOUT, func() { showVersionDalog(NewAppData.GetWindow()) })
+type InfaceApp interface {
+	GetWindow() fyne.Window
+	SetCopysec(int)
+}
+
+func GetMenu(iface InfaceApp) *fyne.MainMenu {
+	menuBtnAbout := fyne.NewMenuItem(cons.MENU_BTN_ABOUT, func() { showVersionDalog(iface.GetWindow()) })
 	menuBtnLargecopy := fyne.NewMenuItem(cons.MENU_BTN_LARGECOPY, nil)
 	menuBtnLargecopy.ChildMenu = fyne.NewMenu("SubMenu",
-		fyne.NewMenuItem(cons.SUBMENU_ONE, func() { setDurationCopy(NewAppData, 5) }),
-		fyne.NewMenuItem(cons.SUBMENU_TWO, func() { setDurationCopy(NewAppData, 10) }),
-		fyne.NewMenuItem(cons.SUBMENU_THREE, func() { setDurationCopy(NewAppData, 15) }),
+		fyne.NewMenuItem(cons.SUBMENU_ONE, func() { setDurationCopy(iface, 5) }),
+		fyne.NewMenuItem(cons.SUBMENU_TWO, func() { setDurationCopy(iface, 10) }),
+		fyne.NewMenuItem(cons.SUBMENU_THREE, func() { setDurationCopy(iface, 15) }),
 	)
 	menuBtnNewBase := fyne.NewMenuItem(cons.MENU_BTN_NEWBASE, nil)
 
@@ -37,7 +42,7 @@ func showVersionDalog(w fyne.Window) {
 	}
 }
 
-func setDurationCopy(NewAppData *src.AppData, i int) {
-	NewAppData.SetCopysec(i)
+func setDurationCopy(iface InfaceApp, i int) {
+	iface.SetCopysec(i)
 	confile.SaveToIni("data", "duration", strconv.Itoa(i))
 }

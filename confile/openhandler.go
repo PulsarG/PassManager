@@ -15,51 +15,55 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func findFile(NewAppData *src.AppData) bool {
+func findFile(iface InfaceApp) bool {
+	var cellData []src.CellData
 	isFind := false
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
-				NewAppData.SetFilepath(uc.URI().Path())
-				SaveToIni("file", "path", NewAppData.GetFilepath())
+				iface.SetFilepath(uc.URI().Path())
+				SaveToIni("file", "path", iface.GetFilepath())
 				data, _ := io.ReadAll(uc)
-				err := json.Unmarshal(data, &NewAppData.CellList)
+				err := json.Unmarshal(data, &cellData)
 				if err != nil {
 					panic(err)
 				}
-				NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
+				iface.SetCellList(cellData)
+				iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
 				isFind = true
 			} else {
 				isFind = false
 			}
-		}, NewAppData.GetWindow(),
+		}, iface.GetWindow(),
 	)
 	return isFind
 }
 
-func GetDatafromFile(NewAppData *src.AppData) {
+func GetDatafromFile(iface InfaceApp) {
+	cellData := iface.GetCellList()
 	file, err := os.Open(GetFromIni("file", "path"))
 	if err != nil {
 		fmt.Printf("2Error opening file: %s\n", err)
-		NewAppData.SetFilepath("")
-		SaveToIni("file", "path", NewAppData.GetFilepath())
-		dialog.ShowCustom("Not File", "Ok", widget.NewLabel("File not found. Please create new file"), NewAppData.GetWindow())
-		NewAppData.GetCanvas().SetContent(container.NewCenter(CreateMangerBtns(NewAppData)))
+		iface.SetFilepath("")
+		SaveToIni("file", "path", iface.GetFilepath())
+		dialog.ShowCustom("Not File", "Ok", widget.NewLabel("File not found. Please create new file"), iface.GetWindow())
+		iface.GetCanvas().SetContent(container.NewCenter(CreateMangerBtns(iface)))
 	} else {
 		result, _ := ioutil.ReadAll(file)
-		err := json.Unmarshal(result, &NewAppData.CellList)
+		err := json.Unmarshal(result, &cellData)
 		if err != nil {
 			panic(err)
 		}
-		NewAppData.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(NewAppData), CreateList(NewAppData)))
+		iface.SetCellList(cellData)
+		iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
 
 	}
 	defer file.Close()
 }
 
-func OpenFile(NewAppData *src.AppData) bool {
+func OpenFile(iface InfaceApp) bool {
 	/* if GetFilepathFromIni() == "" { */
-	return findFile(NewAppData)
+	return findFile(iface)
 	/* } else {
 		GetDatafromFile(NewAppData)
 	} */
