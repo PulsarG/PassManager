@@ -4,10 +4,12 @@ import (
 	"PassManager/confile"
 	"PassManager/cons"
 	"PassManager/menu/upd"
+
 	/* "PassManager/src" */
 	"strconv"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
@@ -38,7 +40,12 @@ func showVersionDalog(w fyne.Window) {
 	if vers == checkVersion {
 		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", widget.NewLabel("Используется актуальная версия "+vers), w)
 	} else {
-		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", widget.NewLabel("Данная версия устарела. \n Актуальная версия: "+checkVersion), w)
+
+		container := container.NewVBox(
+			widget.NewLabel("Доступна новая версия: "+checkVersion),
+			widget.NewButton("Update now", func() { upd.Update() }))
+
+		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", container, w)
 	}
 }
 

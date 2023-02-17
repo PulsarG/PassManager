@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	
+
 	"PassManager/cons"
-	)
+)
 
 type Release struct {
 	TagName string `json:"tag_name"`
