@@ -33,9 +33,16 @@ const (
 	MENU_BTN_LARGECOPY = "Duration of copying"
 	MENU_BTN_ABOUT     = "About"
 
+	MENU_UPDATE_ACTUAL    = "The current version is being used "
+	MENU_UPDATE_OLD       = "New version available: "
+	MENU_OPEN_GITHUB_LINK = "Open Github page"
+
 	SUBMENU_ONE   = "5 sec"
 	SUBMENU_TWO   = "10 sec"
 	SUBMENU_THREE = "15 sec"
 
 	URL_LATEST_VERSION = "https://api.github.com/repos/PulsarG/PassManager/releases/latest"
+	URL_FOR_DOWNLOAD   = "https://github.com/PulsarG/PassManager/releases/download/"
+
+	URL_GITHUB_LATEST_PAGE = "https://github.com/PulsarG/PassManager/releases/latest"
 )

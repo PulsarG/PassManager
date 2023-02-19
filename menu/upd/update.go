@@ -1,30 +1,54 @@
 package upd
 
 import (
-	"fmt"
-	"github.com/inconshreveable/go-update"
+	"PassManager/confile"
+	"PassManager/cons"
 	"net/http"
+	"os"
+	"os/exec"
+
+	"github.com/inconshreveable/go-update"
 )
 
-func Update(){
-	// Получаем URL для загрузки новой версии
-	newVersion := ChekVersion()
-	url := "https://github.com/PulsarG/PassManager/releases/download/" + newVersion + "/EnigmaPass_" + newVersion + "_Win10.7z"
+func Update() string {
+	exePath, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
 
-	// Отправляем запрос на URL
+	newVersion := ChekVersion()
+	url := cons.URL_FOR_DOWNLOAD + newVersion + "/auto-update-file.exe "
+
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Error downloading update:", err)
-		return
+		return "Fail download file"
 	}
 	defer resp.Body.Close()
 
-	// Обновляем приложение
-	err = update.Apply(resp.Body, update.Options{})
+	oldPath := update.Apply(resp.Body, update.Options{
+		TargetPath: exePath,
+	})
 	if err != nil {
-		fmt.Println("Error updating application:", err)
-		return
+		if rerr := update.RollbackError(err); rerr != nil {
+			return "Fail update file"
+		}
 	}
 
-	fmt.Println("Application updated successfully.")
+	confile.SaveToIni("data", "version", newVersion)
+	confile.SaveToIni("data", "old", oldPath)
+
+	executablePath, err := os.Executable()
+	if err != nil {
+		return "Other Fail"
+	}
+	err = exec.Command(executablePath).Start()
+	if err != nil {
+		return "Fail start new version"
+	}
+	
+	os.Exit(0)
+
+	/* confile.SaveToIni("data", "deletedold", "false") */
+
+	return "Oops"
 }

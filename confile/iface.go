@@ -10,6 +10,7 @@ import (
 )
 
 type InfaceApp interface {
+	GetApp() fyne.App
 	GetWindow() fyne.Window
 	GetCanvas() fyne.Canvas
 
