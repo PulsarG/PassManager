@@ -6,6 +6,7 @@ import (
 
 	"PassManager/cons"
 	"PassManager/elem"
+	"PassManager/passgen"
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
@@ -73,7 +74,9 @@ func createNewCellList(iface InfaceApp) {
 			widget.NewFormItem(cons.FORM_LABEL_LOGIN, newCell.GetLogin()),
 			widget.NewFormItem(cons.FORM_LABEL_PASS, newCell.GetPass()),
 		)
-		comt := container.NewVBox(form, elem.NewButton("random pass", func() {}))
+		comt := container.NewVBox(form, elem.NewButton("Random pass (20)", func() {
+			newCell.GetPass().SetText(passgen.GetRandomPass())
+		}))
 		dialog.ShowCustomConfirm(cons.DIALOG_CREATE_CELL_NAME,
 			"Add",
 			"Close",
