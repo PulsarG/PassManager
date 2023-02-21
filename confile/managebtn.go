@@ -29,7 +29,13 @@ func CreateMangerBtns(iface InfaceApp) *fyne.Container {
 	/* btnSave := createColorBtn(cons.BTN_LABEL_SAVE, iface, func() { saveFile(iface) }) */
 	containerOpenSaveBtn := container.NewGridWithColumns(1, btnOpen)
 
-	btnOpenCustomRotor := createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, iface, func() {})
+	btnOpenCustomRotor := elem.NewButton(cons.BTN_LABEL_OPEN_ROTOR, func() {
+		GetRotorFromFile(iface)
+	})
+	/* createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, iface, func() {
+		GetDatafromFile(iface)
+	}) */
+
 	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, iface, func() {
 		createSaveNewRotor(iface)
 	})
@@ -58,6 +64,7 @@ func createColorBtn(label string, iface InfaceApp, f func()) *fyne.Container {
 		elem.NewButton(label, f),
 	)
 }
+
 func createNewCellList(iface InfaceApp) {
 	if iface.GetEntryCode().Text != "" {
 		newCell := src.CreateNewCell()

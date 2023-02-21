@@ -13,6 +13,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"github.com/PulsarG/Enigma"
 )
 
 func findFile(iface InfaceApp) bool {
@@ -39,11 +40,28 @@ func findFile(iface InfaceApp) bool {
 	return isFind
 }
 
+func GetRotorFromFile(iface InfaceApp) {
+	var NewRotor [162]int
+	dialog.ShowFileOpen(
+		func(uc fyne.URIReadCloser, _ error) {
+			if uc != nil {
+				data, _ := io.ReadAll(uc)
+				err := json.Unmarshal(data, &NewRotor)
+				if err != nil {
+					panic(err)
+				}
+				enigma.SetCustomRotor(NewRotor)
+
+			}
+		}, iface.GetWindow(),
+	)
+}
+
 func GetDatafromFile(iface InfaceApp) {
 	cellData := iface.GetCellList()
 	file, err := os.Open(GetFromIni("file", "path"))
 	if err != nil {
-		fmt.Printf("2Error opening file: %s\n", err)
+		fmt.Printf("Error opening file: %s\n", err)
 		iface.SetFilepath("")
 		SaveToIni("file", "path", iface.GetFilepath())
 		dialog.ShowCustom("Not File", "Ok", widget.NewLabel("File not found. Please create new file"), iface.GetWindow())

@@ -23,6 +23,8 @@ const (
 	BTN_LABEL_COPY_LOGIN   = "Copy Login"
 	BTN_LABEL_COPY_PASS    = "Copy Password"
 	BTN_LABEL_SHOW_LOGPASS = "Show"
+	BTN_LABEL_EDIT         = "Edit"
+	BTN_LABEL_DELETE       = "Delete"
 
 	DIALOG_CREATE_CELL_NAME         = "Enter New Data"
 	DIALOG_CREATE_LABEL_PLACEHOLDER = "Enter Name"

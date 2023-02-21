@@ -31,7 +31,11 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 		fyne.NewMenuItem(cons.SUBMENU_TWO, func() { setDurationCopy(iface, 10) }),
 		fyne.NewMenuItem(cons.SUBMENU_THREE, func() { setDurationCopy(iface, 15) }),
 	)
-	menuBtnNewBase := fyne.NewMenuItem(cons.MENU_BTN_NEWBASE, nil)
+	menuBtnNewBase := fyne.NewMenuItem(cons.MENU_BTN_NEWBASE, func() {
+		confile.SaveToIni("file", "path", "")
+		iface.SetCellList(nil)
+		confile.SaveFile(iface)
+	})
 
 	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, menuBtnAbout)
 	mainMenu := fyne.NewMainMenu(menu)

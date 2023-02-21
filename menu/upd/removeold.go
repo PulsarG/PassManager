@@ -17,21 +17,25 @@ func CheckOld() {
 	ticker := time.NewTicker(time.Second)
 CHECK:
 	for range ticker.C {
-		if _, err := os.Stat(confile.GetFromIni("data", "old")); os.IsNotExist(err) {
+		if confile.GetFromIni("data", "old") == "" {
 			ticker.Stop()
 			break CHECK
 		} else {
-			removeOld()
-			confile.SaveToIni("data", "old", "")
-			ticker.Stop()
-			break CHECK
+			if removeOld() {
+				ticker.Stop()
+				break CHECK
+			}
 		}
 	}
 }
 
-func removeOld() {
+func removeOld() bool {
 	err := os.Remove(confile.GetFromIni("data", "old"))
 	if err != nil {
 		fmt.Println(err.Error())
+		return false
+	} else {
+		confile.SaveToIni("data", "old", "")
+		return true
 	}
 }
