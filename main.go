@@ -26,7 +26,7 @@ func main() {
 
 	selectWindowContent(NewAppData)
 
-	/* App.Settings().SetTheme(theme.DarkTheme()) */
+	// App.Settings().SetTheme(theme.DarkTheme())
 	mainWindow.SetMainMenu(menu.GetMenu(NewAppData))
 	mainWindow.Show()
 

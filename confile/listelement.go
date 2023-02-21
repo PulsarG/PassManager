@@ -2,6 +2,7 @@ package confile
 
 import (
 	"PassManager/cons"
+	"crypto/sha256"
 	"fmt"
 	"image/color"
 	"time"
@@ -31,7 +32,16 @@ func createListElement(id int, label, login, pass string, iface InfaceApp) *fyne
 
 	contManageCell := container.NewHBox(
 		createManageBtn(cons.BTN_LABEL_EDIT, func() { editCellDialog(iface, id) }),
-		createManageBtn(cons.BTN_LABEL_DELETE, func() { deleteCell(id, iface) }),
+
+		createManageBtn(cons.BTN_LABEL_DELETE, func() {
+			deleteCell(id, iface)
+			h := sha256.New()
+			h.Write([]byte("password"))
+			hashBytes := h.Sum(nil)
+			hashStr := fmt.Sprintf("%x", hashBytes)
+			fmt.Println(hashStr)
+		}),
+
 		createManageBtn(cons.BTN_LABEL_SHOW_LOGPASS, func() {
 			showPass(iface, copyBtnLogin, copyBtnPass, login, pass)
 		}),
