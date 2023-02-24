@@ -24,6 +24,9 @@ func main() {
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
+	// mainWindow.SetFixedSize(true)
+	
+
 	selectWindowContent(NewAppData)
 
 	// App.Settings().SetTheme(theme.DarkTheme())

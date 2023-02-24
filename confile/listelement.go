@@ -164,6 +164,8 @@ func CreateList(iface InfaceApp) *fyne.Container {
 		containerListElement := createListElement(i, iface.GetCellList()[i].Label, iface.GetCellList()[i].Login, iface.GetCellList()[i].Pass, iface)
 		listContainer.Add(containerListElement)
 	}
+	/* scroll := container.NewVScroll(listContainer)
+	vbox2 := fyne.NewContainerWithLayout(layout.NewVBoxLayout(), scroll) */
 	return listContainer
 }
 
@@ -186,6 +188,13 @@ func editCellDialog(iface InfaceApp, id int) {
 		newData[0].PlaceHolder = "New Label"
 		newData[1].PlaceHolder = "New Login"
 		newData[2].PlaceHolder = "New Password"
+
+		newData[0].SetText(iface.GetCellList()[id].Label)
+		logV, _ := enigma.StartCrypt(iface.GetCellList()[id].Login, iface.GetEntryCode().Text)
+		newData[1].SetText(logV)
+		passV, _ := enigma.StartCrypt(iface.GetCellList()[id].Pass, iface.GetEntryCode().Text)
+		newData[2].SetText(passV)
+
 		forms := container.NewVBox(&newData[0], &newData[1], &newData[2])
 		dialog.ShowConfirm("Attention",
 			"Check that the entered password is correct.\nEven with an incorrect password,\n the changes will take effect and later you may not be able to access \nyour login and password with the correct password",

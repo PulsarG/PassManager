@@ -44,10 +44,6 @@ fyne.io/systray v1.10.1-0.20221115204952-d16a6177e6f1/go.mod h1:oM2AQqGJ1AMo4nNq
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/toml v1.1.0/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/PulsarG/Enigma v1.0.0 h1:ai25Cn9H3DriaMMrWfcOsDtbgxTpVoEFvj7cBtFWWdo=
-github.com/PulsarG/Enigma v1.0.0/go.mod h1:n8sQDfCPCZ26UylzJeqy8EmIgOsz/LvkVLzHioDhIwQ=
-github.com/PulsarG/Enigma v1.0.1-0.20230130113728-43ef62f49973 h1:sZRuWKQgGmGOimJlwe7RZNrYZ2QI+zaVJ+c1gnwsDWM=
-github.com/PulsarG/Enigma v1.0.1-0.20230130113728-43ef62f49973/go.mod h1:n8sQDfCPCZ26UylzJeqy8EmIgOsz/LvkVLzHioDhIwQ=
 github.com/PulsarG/Enigma v1.1.1 h1:9V1aUWlhbo++brLsxoBSmzVh+FjCOJ3+ZR10nznfr6g=
 github.com/PulsarG/Enigma v1.1.1/go.mod h1:n8sQDfCPCZ26UylzJeqy8EmIgOsz/LvkVLzHioDhIwQ=
 github.com/akavel/rsrc v0.10.2/go.mod h1:uLoCtb9J+EyAqh+26kdrTgmzRBFPGOolLWKpdxkKq+c=
@@ -278,8 +274,6 @@ github.com/srwiley/oksvg v0.0.0-20220731023508-a61f04f16b76 h1:Ga2uagHhDeGysCixL
 github.com/srwiley/oksvg v0.0.0-20220731023508-a61f04f16b76/go.mod h1:cNQ3dwVJtS5Hmnjxy6AgTPd0Inb3pW05ftPSX7NZO7Q=
 github.com/srwiley/rasterx v0.0.0-20210519020934-456a8d69b780 h1:oDMiXaTMyBEuZMU53atpxqYsSB3U1CHkeAu2zr6wTeY=
 github.com/srwiley/rasterx v0.0.0-20210519020934-456a8d69b780/go.mod h1:mvWM0+15UqyrFKqdRjY6LuAVJR0HOVhJlEgZ5JWtSWU=
-github.com/staktrace/go-update v0.0.0-20210525161054-fc019945f9a2 h1:kyTDvRL8TyTHOx0aK1PKMPVfkI7rCLDC1nrKF7SYOBc=
-github.com/staktrace/go-update v0.0.0-20210525161054-fc019945f9a2/go.mod h1:yzHsbjWRHVF1vVGsluwqCc2TvogFSx9C8TeBh34cMb0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=

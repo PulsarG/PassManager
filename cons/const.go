@@ -3,7 +3,7 @@ package cons
 import ()
 
 const (
-	WINDOW_NAME        = "EnigmaPass "
+	WINDOW_NAME        = "PassManager "
 	WINDOW_MAIN_WEIGHT = 500
 	WINDOW_MAIN_HIGHT  = 500
 
