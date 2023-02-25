@@ -24,25 +24,16 @@ func CreateMangerBtns(iface InfaceApp) *fyne.Container {
 
 	btnCreateCell := createColorBtn(cons.BTN_LABEL_CREATE_NEW_CELL, iface, func() { createNewCellList(iface) })
 
-	// containerAddandKey := container.NewGridWithColumns(2, btnCreateCell, iface.GetEntryCode())
-
 	btnOpen := createColorBtn(cons.BTN_LABEL_OPEN, iface, func() { OpenFile(iface) })
-	/* btnSave := createColorBtn(cons.BTN_LABEL_SAVE, iface, func() { saveFile(iface) }) */
-	// containerOpenSaveBtn := container.NewGridWithColumns(1, btnOpen)
 
 	btnOpenCustomRotor := elem.NewButton(cons.BTN_LABEL_OPEN_ROTOR, func() {
 		GetRotorFromFile(iface)
 	})
-	/* createColorBtn(cons.BTN_LABEL_OPEN_ROTOR, iface, func() {
-		GetDatafromFile(iface)
-	}) */
 
 	btnCreateCustomRotor := createColorBtn(cons.BTN_LABEL_CREATE_CUSTOM_ROTOR, iface, func() {
 		createSaveNewRotor(iface)
 	})
-	// containerCustomRotor := container.NewGridWithColumns(2, btnOpenCustomRotor, btnCreateCustomRotor)
 
-	// containerManager := container.NewGridWithRows(3, containerAddandKey, containerOpenSaveBtn, containerCustomRotor)
 	line := canvas.NewLine(color.Black)
 	line.StrokeWidth = 1
 	line2 := canvas.NewLine(color.Black)
@@ -50,7 +41,7 @@ func CreateMangerBtns(iface InfaceApp) *fyne.Container {
 	line3 := canvas.NewLine(color.Black)
 	line.StrokeWidth = 1
 	containerVbtns := container.NewVBox(iface.GetEntryCode(), line, btnCreateCell, line2, btnOpen, line3, btnOpenCustomRotor, btnCreateCustomRotor)
-	// return containerManager
+
 	return containerVbtns
 }
 
@@ -119,9 +110,7 @@ func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp) {
 
 	iface.SetCellListAppend(*newCellData)
 
-	// iface.GetCanvas().SetContent(container.NewVSplit(CreateMangerBtns(iface), CreateList(iface)))
-	iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) //!!!!!!!!!!!!!!!!!
+	iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 
 	SaveFile(iface)
-	/* iface.SetControlLen(len(iface.GetCellList())) */
 }

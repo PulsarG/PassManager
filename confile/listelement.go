@@ -7,12 +7,9 @@ import (
 	"image/color"
 	"time"
 
-	/* "PassManager/confile" */
 	"PassManager/elem"
-	/* "PassManager/src" */
 
 	"fyne.io/fyne/v2"
-	/* 	"fyne.io/fyne/v2/app" */
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
@@ -117,8 +114,6 @@ func copyAndBarr(txtBoundPass binding.String, iface InfaceApp, barCopy *widget.P
 
 	iface.GetWindow().Clipboard().SetContent(toCopy)
 	progressBarLine(iface, barCopy)
-	// <-time.After(time.Duration(iface.GetCopysec()) * time.Second)
-	// iface.GetWindow().Clipboard().SetContent("")
 }
 
 func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
@@ -127,7 +122,7 @@ func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
 	barCopy.Min = 0.0
 	barCopy.Max = timeSecond
 	barCopy.Show()
-	/* ticker := time.NewTicker(time.Second) */
+
 	iface.SetTicker(time.NewTicker(time.Second))
 	for range iface.GetTicker().C {
 		timeSecond--
@@ -164,16 +159,13 @@ func CreateList(iface InfaceApp) *container.Scroll {
 		containerListElement := createListElement(i, iface.GetCellList()[i].Label, iface.GetCellList()[i].Login, iface.GetCellList()[i].Pass, iface)
 		listContainer.Add(containerListElement)
 	}
-	scroller := container.NewVScroll(listContainer)
-	// vbox2 := container.NewMax(scroll)
-	return scroller
+	return container.NewVScroll(listContainer)
 }
 
 func deleteCell(id int, iface InfaceApp) {
 	dialog.ShowConfirm("DELETE?", "REALY?", func(b bool) {
 		if b {
 			iface.SetDeleteCell(id)
-			/* iface.SetControlLen(len(iface.CellList)) */
 			SaveFile(iface)
 		}
 	}, iface.GetWindow())

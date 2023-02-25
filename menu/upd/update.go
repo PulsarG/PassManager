@@ -48,7 +48,5 @@ func Update() string {
 	
 	os.Exit(0)
 
-	/* confile.SaveToIni("data", "deletedold", "false") */
-
 	return "Oops"
 }

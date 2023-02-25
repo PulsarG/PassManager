@@ -8,7 +8,6 @@ import (
 
 	"net/url"
 
-	/* "PassManager/src" */
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -16,12 +15,6 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
-
-/* type InfaceApp interface {
-	GetWindow() fyne.Window
-	SetCopysec(int)
-	GetApp() fyne.App
-} */
 
 func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 	menuBtnAbout := fyne.NewMenuItem(cons.MENU_BTN_ABOUT, func() { showVersionDalog(iface) })

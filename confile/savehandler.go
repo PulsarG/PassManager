@@ -7,22 +7,11 @@ import (
 	"io/ioutil"
 	"os"
 
-	/* "PassManager/src" */
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
-
-/* type InfaceApp interface {
-	GetWindow() fyne.Window
-	GetCanvas() fyne.Canvas
-	SetCopysec(int)
-	GetCellList() []src.CellData
-	GetFilepath() string
-	SetFilepath(string)
-} */
 
 func SaveFile(iface InfaceApp) {
 	code, err := json.Marshal(iface.GetCellList())
@@ -43,8 +32,7 @@ func createNewFile(iface InfaceApp, code []byte) {
 				iface.SetFilepath(uc.URI().Path())
 				SaveToIni("file", "path", iface.GetFilepath())
 				io.WriteString(uc, string(code))
-				// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
-				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) // !!!!!!!!!!!!!
+				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 			} else {
 				return
 			}
@@ -57,10 +45,8 @@ func createNewRotorFile(iface InfaceApp, code []byte) {
 		func(uc fyne.URIWriteCloser, err error) {
 			if uc != nil {
 				iface.SetFilepath(uc.URI().Path())
-				/* SaveToIni(NewAppData.GetFilepath()) */
 				io.WriteString(uc, string(code))
-				// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
-				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) // !!!!!!!!!!!!!!!!
+				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 			} else {
 				return
 			}
@@ -79,7 +65,6 @@ func saveInFile(iface InfaceApp, code []byte) {
 		return
 	} else {
 		ioutil.WriteFile(GetFromIni("file", "path"), code, 0644)
-		// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
-		iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) //!!!!!!!!!!!!!!!!!!!!!!!!!
+		iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 	}
 }

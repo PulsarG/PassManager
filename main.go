@@ -11,7 +11,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	// "fyne.io/fyne/v2/theme"
 )
 
 func main() {
@@ -23,13 +22,9 @@ func main() {
 	NewAppData := src.NewAppData(App, mainWindow, mainWindow.Canvas(), duration)
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
-
-	// mainWindow.SetFixedSize(true)
 	
-
 	selectWindowContent(NewAppData)
 
-	// App.Settings().SetTheme(theme.DarkTheme())
 	mainWindow.SetMainMenu(menu.GetMenu(NewAppData))
 	mainWindow.Show()
 
