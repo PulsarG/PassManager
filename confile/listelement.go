@@ -117,8 +117,8 @@ func copyAndBarr(txtBoundPass binding.String, iface InfaceApp, barCopy *widget.P
 
 	iface.GetWindow().Clipboard().SetContent(toCopy)
 	progressBarLine(iface, barCopy)
-	<-time.After(time.Duration(iface.GetCopysec()) * time.Second)
-	iface.GetWindow().Clipboard().SetContent("")
+	// <-time.After(time.Duration(iface.GetCopysec()) * time.Second)
+	// iface.GetWindow().Clipboard().SetContent("")
 }
 
 func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
@@ -127,7 +127,6 @@ func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
 	barCopy.Min = 0.0
 	barCopy.Max = timeSecond
 	barCopy.Show()
-
 	/* ticker := time.NewTicker(time.Second) */
 	iface.SetTicker(time.NewTicker(time.Second))
 	for range iface.GetTicker().C {
@@ -136,7 +135,8 @@ func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
 		if timeSecond == 0.0 {
 			barCopy.Hide()
 			iface.GetTicker().Stop()
-		}
+			iface.GetWindow().Clipboard().SetContent("")
+		} 
 	}
 }
 
@@ -158,15 +158,15 @@ func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.
 	}
 }
 
-func CreateList(iface InfaceApp) *fyne.Container {
+func CreateList(iface InfaceApp) *container.Scroll {
 	listContainer := container.NewVBox()
 	for i := 0; i < len(iface.GetCellList()); i++ {
 		containerListElement := createListElement(i, iface.GetCellList()[i].Label, iface.GetCellList()[i].Login, iface.GetCellList()[i].Pass, iface)
 		listContainer.Add(containerListElement)
 	}
-	/* scroll := container.NewVScroll(listContainer)
-	vbox2 := fyne.NewContainerWithLayout(layout.NewVBoxLayout(), scroll) */
-	return listContainer
+	scroller := container.NewVScroll(listContainer)
+	// vbox2 := container.NewMax(scroll)
+	return scroller
 }
 
 func deleteCell(id int, iface InfaceApp) {

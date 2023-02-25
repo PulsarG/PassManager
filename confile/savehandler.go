@@ -43,7 +43,8 @@ func createNewFile(iface InfaceApp, code []byte) {
 				iface.SetFilepath(uc.URI().Path())
 				SaveToIni("file", "path", iface.GetFilepath())
 				io.WriteString(uc, string(code))
-				iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+				// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) // !!!!!!!!!!!!!
 			} else {
 				return
 			}
@@ -58,7 +59,8 @@ func createNewRotorFile(iface InfaceApp, code []byte) {
 				iface.SetFilepath(uc.URI().Path())
 				/* SaveToIni(NewAppData.GetFilepath()) */
 				io.WriteString(uc, string(code))
-				iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+				// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) // !!!!!!!!!!!!!!!!
 			} else {
 				return
 			}
@@ -77,6 +79,7 @@ func saveInFile(iface InfaceApp, code []byte) {
 		return
 	} else {
 		ioutil.WriteFile(GetFromIni("file", "path"), code, 0644)
-		iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+		// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+		iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface))) //!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 }

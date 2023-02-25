@@ -10,8 +10,10 @@ import (
 	"PassManager/src"
 
 	"fyne.io/fyne/v2"
+	// "fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	// "fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/PulsarG/Enigma"
 )
@@ -30,7 +32,8 @@ func findFile(iface InfaceApp) bool {
 					panic(err)
 				}
 				iface.SetCellList(cellData)
-				iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+				// iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
+				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))   //!!!!
 				isFind = true
 			} else {
 				isFind = false
@@ -73,8 +76,11 @@ func GetDatafromFile(iface InfaceApp) {
 			panic(err)
 		}
 		iface.SetCellList(cellData)
-		iface.GetCanvas().SetContent(container.NewVBox(CreateMangerBtns(iface), CreateList(iface)))
 
+		iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))  // !!!!!!!!!!
+
+		/* fyne.NewContainerWithLayout(
+		layout.NewBorderLayout(CreateMangerBtns(iface), nil, nil, nil), CreateMangerBtns(iface), CreateList(iface))) */
 	}
 	defer file.Close()
 }
