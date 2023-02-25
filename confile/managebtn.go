@@ -40,9 +40,12 @@ func CreateMangerBtns(iface InfaceApp) *fyne.Container {
 	line.StrokeWidth = 1
 	line3 := canvas.NewLine(color.Black)
 	line.StrokeWidth = 1
+
 	containerVbtns := container.NewVBox(iface.GetEntryCode(), line, btnCreateCell, line2, btnOpen, line3, btnOpenCustomRotor, btnCreateCustomRotor)
 
-	return containerVbtns
+	bord := container.NewBorder(containerVbtns, iface.GetMainBar(), nil, nil)
+
+	return bord
 }
 
 func createSaveNewRotor(iface InfaceApp) {

@@ -22,21 +22,21 @@ import (
 )
 
 func createListElement(id int, label, login, pass string, iface InfaceApp) *fyne.Container {
-	barCopy := widget.NewProgressBar()
-	barCopy.Hide()
-	copyBtnPass := createBtnWithIcon(iface, pass, cons.BTN_LABEL_COPY_PASS, barCopy)
-	copyBtnLogin := createBtnWithIcon(iface, login, cons.BTN_LABEL_COPY_LOGIN, barCopy)
+	copyBtnPass := createBtnWithIcon(iface, pass, cons.BTN_LABEL_COPY_PASS)
+	copyBtnLogin := createBtnWithIcon(iface, login, cons.BTN_LABEL_COPY_LOGIN)
 
 	contManageCell := container.NewHBox(
 		createManageBtn(cons.BTN_LABEL_EDIT, func() { editCellDialog(iface, id) }),
 
 		createManageBtn(cons.BTN_LABEL_DELETE, func() {
 			deleteCell(id, iface)
+			// !!! Test hach <
 			h := sha256.New()
-			h.Write([]byte("password"))
+			h.Write([]byte(iface.GetEntryCode().Text))
 			hashBytes := h.Sum(nil)
 			hashStr := fmt.Sprintf("%x", hashBytes)
 			fmt.Println(hashStr)
+			// !!! >
 		}),
 
 		createManageBtn(cons.BTN_LABEL_SHOW_LOGPASS, func() {
@@ -59,7 +59,7 @@ func createListElement(id int, label, login, pass string, iface InfaceApp) *fyne
 		contManageCell,
 	)
 
-	listElementContainer := container.NewVBox(line, contNameLogPass, barCopy)
+	listElementContainer := container.NewVBox(line, contNameLogPass)
 
 	if id%2 != 0 {
 		return listElementContainer
@@ -85,21 +85,19 @@ func createManageBtn(label string, f func()) *fyne.Container {
 	return container
 }
 
-func createBtnWithIcon(iface InfaceApp, data, name string, barCopy *widget.ProgressBar) *widget.Button {
+func createBtnWithIcon(iface InfaceApp, data, name string) *widget.Button {
 	txtBoundPass := binding.NewString()
 	txtBoundPass.Set(data)
 	copyBtn := widget.NewButtonWithIcon(name, theme.ContentCopyIcon(), func() {
-		if iface.GetTicker() != nil && iface.GetBar() != nil {
-			iface.GetBar().Hide()
+		if iface.GetTicker() != nil {
 			iface.GetTicker().Stop()
 		}
-		iface.SetBar(barCopy)
-		go copyAndBarr(txtBoundPass, iface, barCopy)
+		go copyAndBarr(txtBoundPass, iface)
 	})
 	return copyBtn
 }
 
-func copyAndBarr(txtBoundPass binding.String, iface InfaceApp, barCopy *widget.ProgressBar) {
+func copyAndBarr(txtBoundPass binding.String, iface InfaceApp) {
 	content, err := txtBoundPass.Get()
 	if err != nil {
 		fmt.Println("Error", err)
@@ -113,25 +111,26 @@ func copyAndBarr(txtBoundPass binding.String, iface InfaceApp, barCopy *widget.P
 	}
 
 	iface.GetWindow().Clipboard().SetContent(toCopy)
-	progressBarLine(iface, barCopy)
+	progressBarLine(iface)
 }
 
-func progressBarLine(iface InfaceApp, barCopy *widget.ProgressBar) {
+func progressBarLine(iface InfaceApp) {
 	timeSecond := float64(iface.GetCopysec())
-	barCopy.Value = timeSecond
-	barCopy.Min = 0.0
-	barCopy.Max = timeSecond
-	barCopy.Show()
+	iface.GetMainBar().Value = timeSecond
+	iface.GetMainBar().Min = 0.0
+	iface.GetMainBar().Max = timeSecond
+	iface.GetMainBar().Show()
 
 	iface.SetTicker(time.NewTicker(time.Second))
 	for range iface.GetTicker().C {
+		iface.GetMainBar().SetValue(timeSecond)
 		timeSecond--
-		barCopy.SetValue(timeSecond)
-		if timeSecond == 0.0 {
-			barCopy.Hide()
+		iface.GetMainBar().SetValue(timeSecond) // With additional output, the progress bar doesn't end too abruptly.
+		if timeSecond <= 0.0 {
+			iface.GetMainBar().Hide()
 			iface.GetTicker().Stop()
 			iface.GetWindow().Clipboard().SetContent("")
-		} 
+		}
 	}
 }
 
@@ -159,11 +158,13 @@ func CreateList(iface InfaceApp) *container.Scroll {
 		containerListElement := createListElement(i, iface.GetCellList()[i].Label, iface.GetCellList()[i].Login, iface.GetCellList()[i].Pass, iface)
 		listContainer.Add(containerListElement)
 	}
-	return container.NewVScroll(listContainer)
+	accIt := widget.NewAccordionItem("123", listContainer)
+	acc := widget.NewAccordion(accIt)
+	return container.NewVScroll(acc)
 }
 
 func deleteCell(id int, iface InfaceApp) {
-	dialog.ShowConfirm("DELETE?", "REALY?", func(b bool) {
+	dialog.ShowConfirm(cons.DIALOG_DELETE_NAME, cons.DIALOG_DELETE_CONFIRM, func(b bool) {
 		if b {
 			iface.SetDeleteCell(id)
 			SaveFile(iface)
@@ -173,7 +174,7 @@ func deleteCell(id int, iface InfaceApp) {
 
 func editCellDialog(iface InfaceApp, id int) {
 	if iface.GetEntryCode().Text == "" {
-		dialog.ShowInformation("Opps", "Please enter key-word", iface.GetWindow())
+		dialog.ShowInformation("Opps", cons.DIALOG_MESSAGE_NO_KEY, iface.GetWindow())
 		return
 	} else {
 		var newData [3]widget.Entry
@@ -189,7 +190,7 @@ func editCellDialog(iface InfaceApp, id int) {
 
 		forms := container.NewVBox(&newData[0], &newData[1], &newData[2])
 		dialog.ShowConfirm("Attention",
-			"Check that the entered password is correct.\nEven with an incorrect password,\n the changes will take effect and later you may not be able to access \nyour login and password with the correct password",
+			cons.DIALOG_ATTENTION_EDIT_CELL_INFO,
 			func(b bool) {
 				if b {
 					dialog.ShowCustomConfirm("Edit", "Accept", "Exit", forms, func(b bool) {

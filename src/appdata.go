@@ -1,7 +1,6 @@
 package src
 
 import (
-	/* "PassManager/confile" */
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -23,6 +22,8 @@ type AppData struct {
 
 	timeBar  *widget.ProgressBar
 	timeTick *time.Ticker
+
+	mainBar *widget.ProgressBar
 }
 
 func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
@@ -31,7 +32,15 @@ func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
 		mainWindow: w,
 		canvas:     c,
 		copySec:    i,
+
+		mainBar: createMainBar(),
 	}
+}
+
+func createMainBar() *widget.ProgressBar {
+	b := widget.NewProgressBar()
+	b.Hide()
+	return b
 }
 
 func (a *AppData) GetApp() fyne.App {
@@ -54,7 +63,6 @@ func (a *AppData) GetControlLenList() int {
 	return a.controlLenList
 }
 
-//
 // File path
 func (a *AppData) GetFilepath() string {
 	return a.filePath
@@ -64,7 +72,6 @@ func (a *AppData) SetFilepath(s string) {
 	a.filePath = s
 }
 
-//
 // Ticker and Bar
 func (a *AppData) GetBar() *widget.ProgressBar {
 	return a.timeBar
@@ -82,8 +89,7 @@ func (a *AppData) SetTicker(t *time.Ticker) {
 	a.timeTick = t
 }
 
-//
-// CopySec 
+// CopySec
 func (a *AppData) GetCopysec() int {
 	return a.copySec
 }
@@ -92,7 +98,6 @@ func (a *AppData) SetCopysec(i int) {
 	a.copySec = i
 }
 
-//
 // Cell List
 func (a *AppData) GetCellList() []CellData {
 	return a.cellList
@@ -108,4 +113,11 @@ func (a *AppData) SetDeleteCell(id int) {
 
 func (a *AppData) SetCellList(list []CellData) {
 	a.cellList = list
+}
+
+func (a *AppData) GetMainBar() *widget.ProgressBar {
+	return a.mainBar
+}
+func (a *AppData) SetMainBar(b *widget.ProgressBar) {
+	a.mainBar = b
 }

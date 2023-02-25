@@ -32,4 +32,7 @@ type InfaceApp interface {
 
 	GetTicker() *time.Ticker
 	SetTicker(*time.Ticker)
+
+	GetMainBar() *widget.ProgressBar
+	SetMainBar(*widget.ProgressBar)
 }

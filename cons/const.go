@@ -31,6 +31,13 @@ const (
 	DIALOG_CREATE_LOGIN_PLACEHOLDER = "Enter Login"
 	DIALOG_CREATE_PASS_PLACEHOLDER  = "Enter Password"
 
+	DIALOG_DELETE_NAME    = "DELETE?"
+	DIALOG_DELETE_CONFIRM = "REALY?"
+
+	DIALOG_MESSAGE_NO_KEY = "Enter master password"
+
+	DIALOG_ATTENTION_EDIT_CELL_INFO = "Check that the entered password is correct.\nEven with an incorrect password,\n the changes will take effect and later you may not be able to access \nyour login and password with the correct password"
+
 	MENU_BTN_NEWBASE   = "Create New Base"
 	MENU_BTN_LARGECOPY = "Duration of copying"
 	MENU_BTN_ABOUT     = "About"
