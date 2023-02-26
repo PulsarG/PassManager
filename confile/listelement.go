@@ -26,10 +26,12 @@ func createListElement(id int, label, login, pass string, iface InfaceApp) *fyne
 	copyBtnLogin := createBtnWithIcon(iface, login, cons.BTN_LABEL_COPY_LOGIN)
 
 	contManageCell := container.NewHBox(
-		createManageBtn(cons.BTN_LABEL_EDIT, func() { editCellDialog(iface, id) }),
+		createManageBtn(cons.BTN_LABEL_EDIT, func() {
+			// editCellDialog(iface, id)
+		}),
 
 		createManageBtn(cons.BTN_LABEL_DELETE, func() {
-			deleteCell(id, iface)
+			// deleteCell(id, iface)
 			// !!! Test hach <
 			h := sha256.New()
 			h.Write([]byte(iface.GetEntryCode().Text))
@@ -153,26 +155,35 @@ func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.
 }
 
 func CreateList(iface InfaceApp) *container.Scroll {
-	listContainer := container.NewVBox()
-	for i := 0; i < len(iface.GetCellList()); i++ {
-		containerListElement := createListElement(i, iface.GetCellList()[i].Label, iface.GetCellList()[i].Login, iface.GetCellList()[i].Pass, iface)
-		listContainer.Add(containerListElement)
+
+	acc := widget.NewAccordion()
+	for gr, _ := range iface.GetCellList() {
+		acc.Append(widget.NewAccordionItem(gr, createOneGroupp(iface, gr)))
 	}
-	accIt := widget.NewAccordionItem("123", listContainer)
-	acc := widget.NewAccordion(accIt)
+	// accIt := widget.NewAccordionItem("123", listContainer)
+	// acc := widget.NewAccordion(accIt)
 	return container.NewVScroll(acc)
 }
 
-func deleteCell(id int, iface InfaceApp) {
+func createOneGroupp(iface InfaceApp, gr string) *fyne.Container {
+	listContainer := container.NewVBox()
+	for i := 0; i < len(iface.GetCellList()[gr]); i++ {
+		containerListElement := createListElement(i, iface.GetCellList()[gr][i].Label, iface.GetCellList()[gr][i].Login, iface.GetCellList()[gr][i].Pass, iface)
+		listContainer.Add(containerListElement)
+	}
+	return listContainer
+}
+
+/* func deleteCell(id int, iface InfaceApp) {
 	dialog.ShowConfirm(cons.DIALOG_DELETE_NAME, cons.DIALOG_DELETE_CONFIRM, func(b bool) {
 		if b {
 			iface.SetDeleteCell(id)
 			SaveFile(iface)
 		}
 	}, iface.GetWindow())
-}
+} */
 
-func editCellDialog(iface InfaceApp, id int) {
+/* func editCellDialog(iface InfaceApp, id int) {
 	if iface.GetEntryCode().Text == "" {
 		dialog.ShowInformation("Opps", cons.DIALOG_MESSAGE_NO_KEY, iface.GetWindow())
 		return
@@ -201,9 +212,9 @@ func editCellDialog(iface InfaceApp, id int) {
 				}
 			}, iface.GetWindow())
 	}
-}
+} */
 
-func editCell(id int, newData [3]widget.Entry, iface InfaceApp) {
+/* func editCell(id int, newData [3]widget.Entry, iface InfaceApp) {
 	if newData[0].Text != "" {
 		iface.GetCellList()[id].Label = newData[0].Text
 	}
@@ -222,7 +233,7 @@ func editCell(id int, newData [3]widget.Entry, iface InfaceApp) {
 		iface.GetCellList()[id].Pass = s
 	}
 	SaveFile(iface)
-}
+} */
 
 func popUpMenu(iface InfaceApp) *widget.PopUpMenu {
 	popMenu := fyne.NewMenu("123", fyne.NewMenuItem("321", func() {}))

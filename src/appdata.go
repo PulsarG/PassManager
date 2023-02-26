@@ -12,7 +12,7 @@ type AppData struct {
 	mainWindow fyne.Window
 	canvas     fyne.Canvas
 
-	cellList  []CellData
+	cellList  map[string][]CellData
 	entryCode widget.Entry
 
 	filePath       string
@@ -32,6 +32,8 @@ func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
 		mainWindow: w,
 		canvas:     c,
 		copySec:    i,
+
+		cellList: make(map[string][]CellData),
 
 		mainBar: createMainBar(),
 	}
@@ -99,19 +101,26 @@ func (a *AppData) SetCopysec(i int) {
 }
 
 // Cell List
-func (a *AppData) GetCellList() []CellData {
+func (a *AppData) GetCellList() map[string][]CellData {
 	return a.cellList
 }
 
-func (a *AppData) SetCellListAppend(newCellData CellData) {
-	a.cellList = append(a.cellList, newCellData)
+func (a *AppData) SetCellListAppend(newCellData CellData, s string) {
+	if CL, ok := a.cellList[s]; ok {
+		CL = append(CL, newCellData)
+		a.cellList[s] = CL
+	} else {
+		var newCL []CellData
+		newCL = append(newCL, newCellData)
+		a.cellList[s] = newCL
+	}
 }
 
-func (a *AppData) SetDeleteCell(id int) {
-	a.cellList = append(a.cellList[:id], a.cellList[id+1:]...)
+func (a *AppData) SetDeleteCell(id int, s string) {
+	a.cellList[s] = append(a.cellList[s][:id], a.cellList[s][id+1:]...)
 }
 
-func (a *AppData) SetCellList(list []CellData) {
+func (a *AppData) SetCellList(list map[string][]CellData) {
 	a.cellList = list
 }
 

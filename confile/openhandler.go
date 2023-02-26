@@ -19,7 +19,7 @@ import (
 )
 
 func findFile(iface InfaceApp) bool {
-	var cellData []src.CellData
+	var cellData map[string][]src.CellData
 	isFind := false
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {

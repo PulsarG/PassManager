@@ -76,7 +76,18 @@ func createNewCellList(iface InfaceApp) {
 			widget.NewFormItem(cons.FORM_LABEL_LOGIN, newCell.GetLogin()),
 			widget.NewFormItem(cons.FORM_LABEL_PASS, newCell.GetPass()),
 		)
-		comt := container.NewVBox(form, elem.NewButton("Random pass (20)", func() {
+
+		var groupp []string
+		for gr, _ := range iface.GetCellList() {
+			if iface.GetCellList() != nil {
+				groupp = append(groupp, gr)
+			}
+		}
+		selGroupp := widget.NewSelectEntry(
+			groupp,
+		)
+
+		comt := container.NewVBox(form, selGroupp, elem.NewButton("Random pass (20)", func() {
 			newCell.GetPass().SetText(passgen.GetRandomPass())
 		}))
 		dialog.ShowCustomConfirm(cons.DIALOG_CREATE_CELL_NAME,
@@ -84,7 +95,7 @@ func createNewCellList(iface InfaceApp) {
 			"Close",
 			comt, func(b bool) {
 				if b {
-					setDataFromDialogCell(newCell, iface)
+					setDataFromDialogCell(newCell, iface, selGroupp.Text)
 				} else {
 					return
 				}
@@ -95,7 +106,7 @@ func createNewCellList(iface InfaceApp) {
 	}
 }
 
-func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp) {
+func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp, groupp string) {
 	newCellData := src.NewCellData()
 	var err bool
 
@@ -111,7 +122,7 @@ func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp) {
 		return
 	}
 
-	iface.SetCellListAppend(*newCellData)
+	iface.SetCellListAppend(*newCellData, groupp)
 
 	iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 

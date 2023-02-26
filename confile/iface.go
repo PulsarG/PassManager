@@ -19,10 +19,10 @@ type InfaceApp interface {
 	GetCopysec() int
 	SetCopysec(int)
 
-	GetCellList() []src.CellData
-	SetCellList([]src.CellData)
-	SetCellListAppend(src.CellData)
-	SetDeleteCell(int)
+	GetCellList() map[string][]src.CellData
+	SetCellList(map[string][]src.CellData)
+	SetCellListAppend(src.CellData, string)
+	SetDeleteCell(int, string)
 
 	GetFilepath() string
 	SetFilepath(string)
