@@ -3,6 +3,7 @@ package menu
 import (
 	"PassManager/confile"
 	"PassManager/cons"
+	// "PassManager/elem"
 	"PassManager/menu/upd"
 	"fmt"
 
@@ -30,7 +31,7 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 		confile.SaveFile(iface)
 	})
 
-	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, menuBtnAbout)
+	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, createMenuGroupSettings(iface), menuBtnAbout)
 	mainMenu := fyne.NewMainMenu(menu)
 	return mainMenu
 }

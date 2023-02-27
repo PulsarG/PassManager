@@ -42,6 +42,9 @@ const (
 	MENU_BTN_LARGECOPY = "Duration of copying"
 	MENU_BTN_ABOUT     = "About"
 
+	MENU_BTN_GROUP_SETTINGS = "Group settings"
+	DIALOG_GROUP_SET_ENTRY_NEWNAME_PLACEHOLDER = "Entry new Name"
+
 	MENU_UPDATE_ACTUAL    = "The current version is being used "
 	MENU_UPDATE_OLD       = "New version available: "
 	MENU_OPEN_GITHUB_LINK = "Open Github page"

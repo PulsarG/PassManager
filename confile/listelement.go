@@ -21,17 +21,18 @@ import (
 	"github.com/PulsarG/Enigma"
 )
 
-func createListElement(id int, label, login, pass string, iface InfaceApp) *fyne.Container {
+func createListElement(groupp string, id int, label, login, pass string, iface InfaceApp) *fyne.Container {
 	copyBtnPass := createBtnWithIcon(iface, pass, cons.BTN_LABEL_COPY_PASS)
 	copyBtnLogin := createBtnWithIcon(iface, login, cons.BTN_LABEL_COPY_LOGIN)
 
 	contManageCell := container.NewHBox(
 		createManageBtn(cons.BTN_LABEL_EDIT, func() {
-			// editCellDialog(iface, id)
+			editCellDialog(iface, id, groupp)
 		}),
 
 		createManageBtn(cons.BTN_LABEL_DELETE, func() {
-			// deleteCell(id, iface)
+			deleteCell(id, iface, groupp)
+
 			// !!! Test hach <
 			h := sha256.New()
 			h.Write([]byte(iface.GetEntryCode().Text))
@@ -160,30 +161,28 @@ func CreateList(iface InfaceApp) *container.Scroll {
 	for gr, _ := range iface.GetCellList() {
 		acc.Append(widget.NewAccordionItem(gr, createOneGroupp(iface, gr)))
 	}
-	// accIt := widget.NewAccordionItem("123", listContainer)
-	// acc := widget.NewAccordion(accIt)
 	return container.NewVScroll(acc)
 }
 
 func createOneGroupp(iface InfaceApp, gr string) *fyne.Container {
 	listContainer := container.NewVBox()
 	for i := 0; i < len(iface.GetCellList()[gr]); i++ {
-		containerListElement := createListElement(i, iface.GetCellList()[gr][i].Label, iface.GetCellList()[gr][i].Login, iface.GetCellList()[gr][i].Pass, iface)
+		containerListElement := createListElement(gr, i, iface.GetCellList()[gr][i].Label, iface.GetCellList()[gr][i].Login, iface.GetCellList()[gr][i].Pass, iface)
 		listContainer.Add(containerListElement)
 	}
 	return listContainer
 }
 
-/* func deleteCell(id int, iface InfaceApp) {
+func deleteCell(id int, iface InfaceApp, gr string) {
 	dialog.ShowConfirm(cons.DIALOG_DELETE_NAME, cons.DIALOG_DELETE_CONFIRM, func(b bool) {
 		if b {
-			iface.SetDeleteCell(id)
+			iface.SetDeleteCell(id, gr)
 			SaveFile(iface)
 		}
 	}, iface.GetWindow())
-} */
+}
 
-/* func editCellDialog(iface InfaceApp, id int) {
+func editCellDialog(iface InfaceApp, id int, gr string) {
 	if iface.GetEntryCode().Text == "" {
 		dialog.ShowInformation("Opps", cons.DIALOG_MESSAGE_NO_KEY, iface.GetWindow())
 		return
@@ -193,10 +192,11 @@ func createOneGroupp(iface InfaceApp, gr string) *fyne.Container {
 		newData[1].PlaceHolder = "New Login"
 		newData[2].PlaceHolder = "New Password"
 
-		newData[0].SetText(iface.GetCellList()[id].Label)
-		logV, _ := enigma.StartCrypt(iface.GetCellList()[id].Login, iface.GetEntryCode().Text)
+		// Заполнение формы существующим
+		newData[0].SetText(iface.GetCellList()[gr][id].Label)
+		logV, _ := enigma.StartCrypt(iface.GetCellList()[gr][id].Login, iface.GetEntryCode().Text)
 		newData[1].SetText(logV)
-		passV, _ := enigma.StartCrypt(iface.GetCellList()[id].Pass, iface.GetEntryCode().Text)
+		passV, _ := enigma.StartCrypt(iface.GetCellList()[gr][id].Pass, iface.GetEntryCode().Text)
 		newData[2].SetText(passV)
 
 		forms := container.NewVBox(&newData[0], &newData[1], &newData[2])
@@ -206,34 +206,34 @@ func createOneGroupp(iface InfaceApp, gr string) *fyne.Container {
 				if b {
 					dialog.ShowCustomConfirm("Edit", "Accept", "Exit", forms, func(b bool) {
 						if b {
-							editCell(id, newData, iface)
+							editCell(id, newData, iface, gr)
 						}
 					}, iface.GetWindow())
 				}
 			}, iface.GetWindow())
 	}
-} */
+}
 
-/* func editCell(id int, newData [3]widget.Entry, iface InfaceApp) {
+func editCell(id int, newData [3]widget.Entry, iface InfaceApp, gr string) {
 	if newData[0].Text != "" {
-		iface.GetCellList()[id].Label = newData[0].Text
+		iface.GetCellList()[gr][id].Label = newData[0].Text
 	}
 	if newData[1].Text != "" {
 		s, b := enigma.StartCrypt(newData[1].Text, iface.GetEntryCode().Text)
 		if !b {
 			return
 		}
-		iface.GetCellList()[id].Login = s
+		iface.GetCellList()[gr][id].Login = s
 	}
 	if newData[2].Text != "" {
 		s, b := enigma.StartCrypt(newData[2].Text, iface.GetEntryCode().Text)
 		if !b {
 			return
 		}
-		iface.GetCellList()[id].Pass = s
+		iface.GetCellList()[gr][id].Pass = s
 	}
 	SaveFile(iface)
-} */
+}
 
 func popUpMenu(iface InfaceApp) *widget.PopUpMenu {
 	popMenu := fyne.NewMenu("123", fyne.NewMenuItem("321", func() {}))
