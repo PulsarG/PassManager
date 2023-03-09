@@ -9,7 +9,7 @@ const (
 
 	WINDOW_LIST_NAME = "List"
 
-	BTN_LABEL_CREATE_NEW_CELL     = "Create New Log-Pass"
+	BTN_LABEL_CREATE_NEW_CELL     = "Add a new Entry"
 	BTN_LABEL_OPEN                = "Open (other) PassBase"
 	BTN_LABEL_SAVE                = "Save"
 	BTN_LABEL_OPEN_ROTOR          = "Open Custom Rotor"

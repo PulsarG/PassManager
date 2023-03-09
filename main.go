@@ -22,7 +22,7 @@ func main() {
 	NewAppData := src.NewAppData(App, mainWindow, mainWindow.Canvas(), duration)
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
-	
+
 	selectWindowContent(NewAppData)
 
 	mainWindow.SetMainMenu(menu.GetMenu(NewAppData))
@@ -35,6 +35,9 @@ func selectWindowContent(NewAppData *src.AppData) {
 	if confile.GetFromIni("file", "path") != "" {
 		confile.GetDatafromFile(NewAppData)
 	} else {
+
 		NewAppData.GetCanvas().SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
 	}
 }
+
+

@@ -83,6 +83,7 @@ func createNewCellList(iface InfaceApp) {
 				groupp = append(groupp, gr)
 			}
 		}
+
 		selGroupp := widget.NewSelectEntry(
 			groupp,
 		)

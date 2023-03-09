@@ -2,7 +2,7 @@ package confile
 
 import (
 	"PassManager/cons"
-	"crypto/sha256"
+	// "crypto/sha256"
 	"fmt"
 	"image/color"
 	"time"
@@ -34,11 +34,11 @@ func createListElement(groupp string, id int, label, login, pass string, iface I
 			deleteCell(id, iface, groupp)
 
 			// !!! Test hach <
-			h := sha256.New()
+			/* h := sha256.New()
 			h.Write([]byte(iface.GetEntryCode().Text))
 			hashBytes := h.Sum(nil)
 			hashStr := fmt.Sprintf("%x", hashBytes)
-			fmt.Println(hashStr)
+			fmt.Println(hashStr) */
 			// !!! >
 		}),
 
@@ -192,6 +192,17 @@ func editCellDialog(iface InfaceApp, id int, gr string) {
 		newData[1].PlaceHolder = "New Login"
 		newData[2].PlaceHolder = "New Password"
 
+		var groupp []string
+		for gr, _ := range iface.GetCellList() {
+			if iface.GetCellList() != nil {
+				groupp = append(groupp, gr)
+			}
+		}
+		selGroupp := widget.NewSelectEntry(
+			groupp,
+		)
+		selGroupp.PlaceHolder = "select a group or enter a new one"
+
 		// Заполнение формы существующим
 		newData[0].SetText(iface.GetCellList()[gr][id].Label)
 		logV, _ := enigma.StartCrypt(iface.GetCellList()[gr][id].Login, iface.GetEntryCode().Text)
@@ -199,14 +210,14 @@ func editCellDialog(iface InfaceApp, id int, gr string) {
 		passV, _ := enigma.StartCrypt(iface.GetCellList()[gr][id].Pass, iface.GetEntryCode().Text)
 		newData[2].SetText(passV)
 
-		forms := container.NewVBox(&newData[0], &newData[1], &newData[2])
+		forms := container.NewVBox(&newData[0], &newData[1], &newData[2], selGroupp)
 		dialog.ShowConfirm("Attention",
 			cons.DIALOG_ATTENTION_EDIT_CELL_INFO,
 			func(b bool) {
 				if b {
 					dialog.ShowCustomConfirm("Edit", "Accept", "Exit", forms, func(b bool) {
 						if b {
-							editCell(id, newData, iface, gr)
+							editCell(id, newData, iface, gr, selGroupp.Text)
 						}
 					}, iface.GetWindow())
 				}
@@ -214,7 +225,7 @@ func editCellDialog(iface InfaceApp, id int, gr string) {
 	}
 }
 
-func editCell(id int, newData [3]widget.Entry, iface InfaceApp, gr string) {
+func editCell(id int, newData [3]widget.Entry, iface InfaceApp, gr, newGr string) {
 	if newData[0].Text != "" {
 		iface.GetCellList()[gr][id].Label = newData[0].Text
 	}
@@ -232,6 +243,14 @@ func editCell(id int, newData [3]widget.Entry, iface InfaceApp, gr string) {
 		}
 		iface.GetCellList()[gr][id].Pass = s
 	}
+
+	if newGr != "" {
+		cell := iface.GetCellList()[gr][id]
+		iface.SetDeleteCell(id, gr)
+
+		iface.SetCellListAppend(cell, newGr)
+	}
+
 	SaveFile(iface)
 }
 
