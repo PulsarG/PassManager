@@ -35,4 +35,6 @@ type InfaceApp interface {
 
 	GetMainBar() *widget.ProgressBar
 	SetMainBar(*widget.ProgressBar)
+
+	GetInfoDialog() *src.InfoDialog
 }

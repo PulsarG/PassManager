@@ -184,7 +184,7 @@ func deleteCell(id int, iface InfaceApp, gr string) {
 
 func editCellDialog(iface InfaceApp, id int, gr string) {
 	if iface.GetEntryCode().Text == "" {
-		dialog.ShowInformation("Opps", cons.DIALOG_MESSAGE_NO_KEY, iface.GetWindow())
+		iface.GetInfoDialog().ShowInfo(cons.DIALOG_MESSAGE_NO_KEY)
 		return
 	} else {
 		var newData [3]widget.Entry

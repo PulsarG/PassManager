@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -24,9 +25,12 @@ type AppData struct {
 	timeTick *time.Ticker
 
 	mainBar *widget.ProgressBar
+
+	InfoDialog InfoDialog
 }
 
 func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
+	iDial := InfoDialog{window: w}
 	return &AppData{
 		app:        a,
 		mainWindow: w,
@@ -36,6 +40,8 @@ func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
 		cellList: make(map[string][]CellData),
 
 		mainBar: createMainBar(),
+
+		InfoDialog: iDial,
 	}
 }
 
@@ -129,4 +135,19 @@ func (a *AppData) GetMainBar() *widget.ProgressBar {
 }
 func (a *AppData) SetMainBar(b *widget.ProgressBar) {
 	a.mainBar = b
+}
+
+//
+func (a *AppData) GetInfoDialog() *InfoDialog {
+	return &a.InfoDialog
+}
+// Class for INFOR DIALOG
+//
+
+type InfoDialog struct {
+	window fyne.Window
+}
+
+func (i *InfoDialog) ShowInfo(info string) {
+	dialog.ShowInformation("Attention", info, i.window)
 }

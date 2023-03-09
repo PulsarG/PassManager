@@ -4,7 +4,7 @@ import (
 	"PassManager/confile"
 	"PassManager/cons"
 	"PassManager/src"
-	"fmt"
+	// "fmt"
 
 	// "PassManager/cons"
 	"PassManager/elem"
@@ -54,7 +54,7 @@ func deleteGroup(iface confile.InfaceApp, nameGr string) {
 				iface.GetCanvas().SetContent(container.NewHSplit(confile.CreateMangerBtns(iface), confile.CreateList(iface)))
 				confile.SaveFile(iface)
 			} else {
-				fmt.Println("Group not empty")
+				iface.GetInfoDialog().ShowInfo("Group not empty")
 			}
 		}
 	}, iface.GetWindow())
