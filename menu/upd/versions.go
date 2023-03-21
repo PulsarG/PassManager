@@ -1,3 +1,5 @@
+// CHECKING AND OBTAINING A NEW VERSION NUMBER
+
 package upd
 
 import (

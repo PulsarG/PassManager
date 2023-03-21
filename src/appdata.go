@@ -1,3 +1,5 @@
+// MAIN GOD CLASS WITH DATA FOR WORK APP
+
 package src
 
 import (

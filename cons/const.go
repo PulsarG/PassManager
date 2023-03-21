@@ -1,3 +1,5 @@
+// ALL STATIC DATA FOR APP
+
 package cons
 
 import ()

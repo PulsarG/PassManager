@@ -1,3 +1,5 @@
+// READ PASS-BASE AND ROTOR
+
 package confile
 
 import (

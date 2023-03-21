@@ -1,3 +1,5 @@
+// CREATE LIST WIDGET WITH NAME-LOGIN-PASS
+
 package confile
 
 import (

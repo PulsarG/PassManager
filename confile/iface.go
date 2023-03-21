@@ -1,3 +1,5 @@
+// INTERFACE APPDATA STRUCT-CLASS FROM SRC/APPDATA
+
 package confile
 
 import (

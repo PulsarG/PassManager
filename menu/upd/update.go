@@ -1,3 +1,5 @@
+// UPDATE APP. DOWNLOAD NEW VERSION EXE AND START RUN THIS
+
 package upd
 
 import (

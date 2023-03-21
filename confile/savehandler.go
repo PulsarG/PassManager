@@ -1,3 +1,5 @@
+// WRITE PASS-BASE AND ROTOR IN FILE
+
 package confile
 
 import (

@@ -1,3 +1,5 @@
+// WIDGET FOR CREATE ONE CELL -NAME-LOG-PASS FROM CELLDATA CLASS
+
 package src
 
 import (

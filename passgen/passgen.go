@@ -1,3 +1,5 @@
+// GENERATE PASS
+
 package passgen
 
 import (

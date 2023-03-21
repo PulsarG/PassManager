@@ -1,3 +1,6 @@
+// HANDLER CONFIG FILE
+// READ, WHRITE, TAKE
+
 package confile
 
 import (

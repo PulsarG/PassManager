@@ -1,3 +1,5 @@
+// GLOBAL MANAGE BUTTONS
+
 package confile
 
 import (

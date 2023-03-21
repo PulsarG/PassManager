@@ -1,3 +1,5 @@
+// REMOVE OLD FILES AFTER UPDATE APP
+
 package upd
 
 import (

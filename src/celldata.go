@@ -1,3 +1,5 @@
+// ONE CELL -NAME-LOG-PASS CLASS
+
 package src
 
 type CellData struct {
