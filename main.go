@@ -35,9 +35,8 @@ func selectWindowContent(NewAppData *src.AppData) {
 	if confile.GetFromIni("file", "path") != "" {
 		confile.GetDatafromFile(NewAppData)
 	} else {
-
 		NewAppData.GetCanvas().SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
-	}
+	} // end if
 }
 
 

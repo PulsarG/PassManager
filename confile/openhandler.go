@@ -38,7 +38,7 @@ func findFile(iface InfaceApp) bool {
 				isFind = true
 			} else {
 				isFind = false
-			}
+			} // end if
 		}, iface.GetWindow(),
 	)
 	return isFind
@@ -56,7 +56,7 @@ func GetRotorFromFile(iface InfaceApp) {
 				}
 				enigma.SetCustomRotor(NewRotor)
 
-			}
+			} // end if
 		}, iface.GetWindow(),
 	)
 }
@@ -73,13 +73,13 @@ func GetDatafromFile(iface InfaceApp) {
 	} else {
 		result, _ := ioutil.ReadAll(file)
 		err := json.Unmarshal(result, &cellData)
-		if err != nil {
+		if err != nil { // if inner
 			panic(err)
-		}
+		} // end if inner
 		iface.SetCellList(cellData)
 
 		iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
-	}
+	} // end if
 	defer file.Close()
 }
 

@@ -19,16 +19,16 @@ func CheckOld() {
 	ticker := time.NewTicker(time.Second)
 CHECK:
 	for range ticker.C {
-		if confile.GetFromIni("data", "old") == "" {
+		if confile.GetFromIni("data", "old") == "" { // if outer
 			ticker.Stop()
 			break CHECK
 		} else {
-			if removeOld() {
+			if removeOld() { // if inner
 				ticker.Stop()
 				break CHECK
-			}
-		}
-	}
+			} // end if inner
+		} // end if outer
+	} // end for
 }
 
 func removeOld() bool {
@@ -39,5 +39,5 @@ func removeOld() bool {
 	} else {
 		confile.SaveToIni("data", "old", "")
 		return true
-	}
+	} // end if
 }

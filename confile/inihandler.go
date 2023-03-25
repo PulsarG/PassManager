@@ -14,7 +14,7 @@ func cfgHandler() *ini.File {
 	if err != nil {
 		fmt.Printf("Error loading config file: %s\n", err)
 		return nil
-	}
+	} // end if
 	return cfg
 }
 
@@ -29,5 +29,5 @@ func SaveToIni(section, key, val string) {
 	if err != nil {
 		fmt.Printf("Error saving config file: %s\n", err)
 		return
-	}
+	} // end if
 }

@@ -19,12 +19,13 @@ func SaveFile(iface InfaceApp) {
 	code, err := json.Marshal(iface.GetCellList())
 	if err != nil {
 		fmt.Println("Error", err)
-	}
+	} // end if
+
 	if GetFromIni("file", "path") == "" {
 		createNewFile(iface, code)
 	} else {
 		saveInFile(iface, code)
-	}
+	} // end if
 }
 
 func createNewFile(iface InfaceApp, code []byte) {
@@ -37,7 +38,7 @@ func createNewFile(iface InfaceApp, code []byte) {
 				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 			} else {
 				return
-			}
+			} // end if
 		}, iface.GetWindow(),
 	)
 }
@@ -51,7 +52,7 @@ func createNewRotorFile(iface InfaceApp, code []byte) {
 				iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 			} else {
 				return
-			}
+			} // end if
 		}, iface.GetWindow(),
 	)
 }
@@ -68,5 +69,5 @@ func saveInFile(iface InfaceApp, code []byte) {
 	} else {
 		ioutil.WriteFile(GetFromIni("file", "path"), code, 0644)
 		iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
-	}
+	} // end if
 }

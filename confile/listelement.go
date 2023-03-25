@@ -34,14 +34,6 @@ func createListElement(groupp string, id int, label, login, pass string, iface I
 
 		createManageBtn(cons.BTN_LABEL_DELETE, func() {
 			deleteCell(id, iface, groupp)
-
-			// !!! Test hach <
-			/* h := sha256.New()
-			h.Write([]byte(iface.GetEntryCode().Text))
-			hashBytes := h.Sum(nil)
-			hashStr := fmt.Sprintf("%x", hashBytes)
-			fmt.Println(hashStr) */
-			// !!! >
 		}),
 
 		createManageBtn(cons.BTN_LABEL_SHOW_LOGPASS, func() {
@@ -76,7 +68,7 @@ func createListElement(groupp string, id int, label, login, pass string, iface I
 			canvas.NewRectangle(color),
 		)
 		return listElementContainerColor
-	}
+	} // end if
 }
 
 func createManageBtn(label string, f func()) *fyne.Container {
@@ -107,13 +99,13 @@ func copyAndBarr(txtBoundPass binding.String, iface InfaceApp) {
 	if err != nil {
 		fmt.Println("Error", err)
 		return
-	}
+	} // end if
 
 	toCopy, errEnc := enigma.StartCrypt(content, iface.GetEntryCode().Text)
 	if !errEnc {
 		dialog.ShowCustom("Error", "OK", widget.NewLabel(toCopy), iface.GetWindow())
 		return
-	}
+	} // end if
 
 	iface.GetWindow().Clipboard().SetContent(toCopy)
 	progressBarLine(iface)
@@ -136,7 +128,7 @@ func progressBarLine(iface InfaceApp) {
 			iface.GetTicker().Stop()
 			iface.GetWindow().Clipboard().SetContent("")
 		}
-	}
+	} // end for
 }
 
 func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
@@ -154,7 +146,7 @@ func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.
 
 		copyBtnLogin.SetText(cons.BTN_LABEL_COPY_LOGIN)
 		copyBtnLogin.Refresh()
-	}
+	} // end if
 }
 
 func CreateList(iface InfaceApp) *container.Scroll {
@@ -162,7 +154,7 @@ func CreateList(iface InfaceApp) *container.Scroll {
 	acc := widget.NewAccordion()
 	for gr, _ := range iface.GetCellList() {
 		acc.Append(widget.NewAccordionItem(gr, createOneGroupp(iface, gr)))
-	}
+	} // end for
 	return container.NewVScroll(acc)
 }
 
@@ -171,7 +163,7 @@ func createOneGroupp(iface InfaceApp, gr string) *fyne.Container {
 	for i := 0; i < len(iface.GetCellList()[gr]); i++ {
 		containerListElement := createListElement(gr, i, iface.GetCellList()[gr][i].Label, iface.GetCellList()[gr][i].Login, iface.GetCellList()[gr][i].Pass, iface)
 		listContainer.Add(containerListElement)
-	}
+	} // end for
 	return listContainer
 }
 
@@ -180,12 +172,12 @@ func deleteCell(id int, iface InfaceApp, gr string) {
 		if b {
 			iface.SetDeleteCell(id, gr)
 			SaveFile(iface)
-		}
+		} // end if
 	}, iface.GetWindow())
 }
 
 func editCellDialog(iface InfaceApp, id int, gr string) {
-	if iface.GetEntryCode().Text == "" {
+	if iface.GetEntryCode().Text == "" { // out if
 		iface.GetInfoDialog().ShowInfo(cons.DIALOG_MESSAGE_NO_KEY)
 		return
 	} else {
@@ -199,7 +191,7 @@ func editCellDialog(iface InfaceApp, id int, gr string) {
 			if iface.GetCellList() != nil {
 				groupp = append(groupp, gr)
 			}
-		}
+		} // end for
 		selGroupp := widget.NewSelectEntry(
 			groupp,
 		)
@@ -216,42 +208,44 @@ func editCellDialog(iface InfaceApp, id int, gr string) {
 		dialog.ShowConfirm("Attention",
 			cons.DIALOG_ATTENTION_EDIT_CELL_INFO,
 			func(b bool) {
-				if b {
+				if b {  // inner
 					dialog.ShowCustomConfirm("Edit", "Accept", "Exit", forms, func(b bool) {
 						if b {
 							editCell(id, newData, iface, gr, selGroupp.Text)
 						}
 					}, iface.GetWindow())
-				}
+				} // end if inner
 			}, iface.GetWindow())
-	}
+	} // end if out
 }
 
 func editCell(id int, newData [3]widget.Entry, iface InfaceApp, gr, newGr string) {
 	if newData[0].Text != "" {
 		iface.GetCellList()[gr][id].Label = newData[0].Text
-	}
-	if newData[1].Text != "" {
+	} // end if
+
+	if newData[1].Text != "" { 
 		s, b := enigma.StartCrypt(newData[1].Text, iface.GetEntryCode().Text)
-		if !b {
+		if !b { // if inner
 			return
-		}
+		} // end if inner
 		iface.GetCellList()[gr][id].Login = s
-	}
+	} // end if
+
 	if newData[2].Text != "" {
 		s, b := enigma.StartCrypt(newData[2].Text, iface.GetEntryCode().Text)
-		if !b {
+		if !b { // if inner
 			return
-		}
+		} // end if inner
 		iface.GetCellList()[gr][id].Pass = s
-	}
+	} // end if
 
 	if newGr != "" {
 		cell := iface.GetCellList()[gr][id]
 		iface.SetDeleteCell(id, gr)
 
 		iface.SetCellListAppend(cell, newGr)
-	}
+	} // end if
 
 	SaveFile(iface)
 }

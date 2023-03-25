@@ -121,7 +121,7 @@ func (a *AppData) SetCellListAppend(newCellData CellData, s string) {
 		var newCL []CellData
 		newCL = append(newCL, newCellData)
 		a.cellList[s] = newCL
-	}
+	} // end if
 }
 
 func (a *AppData) SetDeleteCell(id int, s string) {

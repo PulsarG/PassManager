@@ -14,7 +14,7 @@ func GetRandomPass() string {
 
 	for i := 0; i < 20; i++ {
 		newPass += signsArray[i]
-	}
+	} // end for
 
 	return newPass
 }

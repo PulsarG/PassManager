@@ -54,11 +54,11 @@ func createSaveNewRotor(iface InfaceApp) {
 	rotor, errRotor := enigma.NewRotor()
 	if !errRotor {
 		dialog.ShowInformation("Error", "Opps, try again", iface.GetWindow())
-	}
+	} // end if
 	rotorData, err := json.Marshal(rotor)
 	if err != nil {
 		dialog.ShowInformation("Error", "Opps, try again", iface.GetWindow())
-	}
+	} // end if
 	createNewRotorFile(iface, rotorData)
 }
 
@@ -71,7 +71,7 @@ func createColorBtn(label string, iface InfaceApp, f func()) *fyne.Container {
 }
 
 func createNewCellList(iface InfaceApp) {
-	if iface.GetEntryCode().Text != "" {
+	if iface.GetEntryCode().Text != "" { // if outer
 		newCell := src.CreateNewCell()
 		form := widget.NewForm(
 			widget.NewFormItem(cons.FORM_LABEL_NAME, newCell.GetLabel()),
@@ -81,10 +81,10 @@ func createNewCellList(iface InfaceApp) {
 
 		var groupp []string
 		for gr, _ := range iface.GetCellList() {
-			if iface.GetCellList() != nil {
+			if iface.GetCellList() != nil { // if inner
 				groupp = append(groupp, gr)
-			}
-		}
+			} // end if inner
+		} // end for
 
 		selGroupp := widget.NewSelectEntry(
 			groupp,
@@ -106,7 +106,7 @@ func createNewCellList(iface InfaceApp) {
 			iface.GetWindow())
 	} else {
 		dialog.ShowCustom("Oops", "Ok", widget.NewLabel("Please entry Key-Word"), iface.GetWindow())
-	}
+	} // end if outer
 }
 
 func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp, groupp string) {
@@ -118,12 +118,13 @@ func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp, groupp string) {
 	if !err {
 		dialog.ShowCustom("Error", "OK", widget.NewLabel(newCellData.Login), iface.GetWindow())
 		return
-	}
+	} // end if
+	
 	newCellData.Pass, err = enigma.StartCrypt(newCell.GetPass().Text, iface.GetEntryCode().Text)
 	if !err {
 		dialog.ShowCustom("Error", "OK", widget.NewLabel(newCellData.Pass), iface.GetWindow())
 		return
-	}
+	} // end if
 
 	iface.SetCellListAppend(*newCellData, groupp)
 

@@ -49,16 +49,16 @@ func createMenuGroupSettings(iface confile.InfaceApp) *fyne.MenuItem {
 
 func deleteGroup(iface confile.InfaceApp, nameGr string) {
 	dialog.ShowConfirm(cons.DIALOG_DELETE_NAME, cons.DIALOG_DELETE_CONFIRM, func(b bool) {
-		if b {
+		if b { // if outer
 			val := iface.GetCellList()[nameGr]
-			if len(val) == 0 {
+			if len(val) == 0 { // if inner
 				delete(iface.GetCellList(), nameGr)
 				iface.GetCanvas().SetContent(container.NewHSplit(confile.CreateMangerBtns(iface), confile.CreateList(iface)))
 				confile.SaveFile(iface)
 			} else {
 				iface.GetInfoDialog().ShowInfo("Group not empty")
-			}
-		}
+			} // end if inner
+		} // end if outer
 	}, iface.GetWindow())
 }
 
@@ -69,7 +69,7 @@ func renameGroup(iface confile.InfaceApp, nameGr, newName string) {
 		delete(iface.GetCellList(), nameGr)
 		iface.GetCellList()[newName] = arrCell
 		confile.SaveFile(iface)
-	}
+	} // end if
 }
 
 func getGroupList(m map[string][]src.CellData) []string {
@@ -77,7 +77,7 @@ func getGroupList(m map[string][]src.CellData) []string {
 	for gr, _ := range m {
 		if m != nil {
 			groupp = append(groupp, gr)
-		}
-	}
+		} // end if
+	} // end for
 	return groupp
 }

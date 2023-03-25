@@ -41,13 +41,13 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 func showVersionDalog(iface confile.InfaceApp) {
 	vers := confile.GetFromIni("data", "version")
 	checkVersion := upd.ChekVersion()
-	if vers == checkVersion {
+	if vers == checkVersion { // if outer
 		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", widget.NewLabel(cons.MENU_UPDATE_ACTUAL+vers), iface.GetWindow())
 	} else {
 		url, errParse := url.Parse(cons.URL_GITHUB_LATEST_PAGE)
-		if errParse != nil {
+		if errParse != nil { // if inner
 			fmt.Println("Parse fail")
-		}
+		} // end if inner
 		container := container.NewVBox(
 			widget.NewLabel(cons.MENU_UPDATE_OLD+checkVersion),
 			widget.NewHyperlink(cons.MENU_OPEN_GITHUB_LINK, url),
@@ -56,7 +56,7 @@ func showVersionDalog(iface confile.InfaceApp) {
 			}))
 
 		dialog.ShowCustom(cons.MENU_BTN_ABOUT, "Cancel", container, iface.GetWindow())
-	}
+	} // end if outer
 }
 
 func setDurationCopy(iface confile.InfaceApp, i int) {
