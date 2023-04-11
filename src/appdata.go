@@ -16,7 +16,7 @@ type AppData struct {
 	canvas     fyne.Canvas
 
 	cellList  map[string][]CellData
-	entryCode widget.Entry
+	entryCode *widget.Entry
 
 	filePath       string
 	controlLenList int
@@ -39,12 +39,19 @@ func NewAppData(a fyne.App, w fyne.Window, c fyne.Canvas, i int) *AppData {
 		canvas:     c,
 		copySec:    i,
 
+		entryCode: createPassEntry(),
+
 		cellList: make(map[string][]CellData),
 
 		mainBar: createMainBar(),
 
 		InfoDialog: iDial,
 	}
+}
+
+func createPassEntry() *widget.Entry {
+	p := widget.NewPasswordEntry()
+	return p
 }
 
 func createMainBar() *widget.ProgressBar {
@@ -66,7 +73,7 @@ func (a *AppData) GetCanvas() fyne.Canvas {
 }
 
 func (a *AppData) GetEntryCode() *widget.Entry {
-	return &a.entryCode
+	return a.entryCode
 }
 
 func (a *AppData) GetControlLenList() int {
