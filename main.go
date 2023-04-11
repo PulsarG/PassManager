@@ -11,7 +11,9 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/desktop"
+	// "fyne.io/fyne/v2/dialog"
+	// "fyne.io/fyne/v2/driver/desktop"
+	// "fyne.io/fyne/v2/widget"
 )
 
 func main() {
@@ -24,22 +26,22 @@ func main() {
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
 
-	if desk, ok := mainApp.(desktop.App); ok {
-		m := fyne.NewMenu("MyApp",
-			fyne.NewMenuItem("Show", func() {
-				mainWindow.Show()
-			}))
-		desk.SetSystemTrayMenu(m)
-	}
-
+	// if desk, ok := mainApp.(desktop.App); ok {
+	// 	m := fyne.NewMenu("MyApp",
+	// 		fyne.NewMenuItem("Show", func() {
+	// 			mainWindow.Show()
+	// 		}))
+	// 	desk.SetSystemTrayMenu(m)
+	// }
 
 	selectWindowContent(NewAppData)
 
 	mainWindow.SetMainMenu(menu.GetMenu(NewAppData))
 
-	mainWindow.SetCloseIntercept(func() {
-		mainWindow.Hide()
-	})
+	// mainWindow.SetCloseIntercept(func() {
+	// 	dialog.ShowCustomConfirm("Tray", "Hide app", "Close app", widget.NewLabel("Select:"), func(b bool) {}, mainWindow)
+	// 	mainWindow.Hide()
+	// })
 	mainWindow.CenterOnScreen()
 	mainWindow.Show()
 	// mainWindow.CenterOnScreen()
