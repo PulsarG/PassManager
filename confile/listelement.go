@@ -163,7 +163,12 @@ func CreateList(iface InfaceApp) *container.Scroll {
 	for gr, _ := range iface.GetCellList() {
 		acc.Append(widget.NewAccordionItem(gr, createOneGroupp(iface, gr)))
 	}
-	return container.NewVScroll(acc)
+	acc.Resize(fyne.NewSize(200, 200))
+	a := container.NewHScroll(acc)
+	a.SetMinSize(fyne.NewSize(750, 200))
+	b := container.NewVScroll(a)
+	b.SetMinSize(fyne.NewSize(750, 200))
+	return b
 }
 
 func createOneGroupp(iface InfaceApp, gr string) *fyne.Container {

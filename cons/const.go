@@ -6,8 +6,8 @@ import ()
 
 const (
 	WINDOW_NAME        = "EnigmaPass "
-	WINDOW_MAIN_WEIGHT = 500
-	WINDOW_MAIN_HIGHT  = 500
+	WINDOW_MAIN_WEIGHT = 900
+	WINDOW_MAIN_HIGHT  = 400
 
 	WINDOW_LIST_NAME = "List"
 
@@ -42,9 +42,10 @@ const (
 
 	MENU_BTN_NEWBASE   = "Create New Base"
 	MENU_BTN_LARGECOPY = "Duration of copying"
+	MENU_BTN_SELECT_TRAY_SYS = "On click on close icon"
 	MENU_BTN_ABOUT     = "About"
 
-	MENU_BTN_GROUP_SETTINGS = "Group settings"
+	MENU_BTN_GROUP_SETTINGS                    = "Group settings"
 	DIALOG_GROUP_SET_ENTRY_NEWNAME_PLACEHOLDER = "Entry new Name"
 
 	MENU_UPDATE_ACTUAL    = "The current version is being used "
@@ -54,6 +55,9 @@ const (
 	SUBMENU_ONE   = "5 sec"
 	SUBMENU_TWO   = "10 sec"
 	SUBMENU_THREE = "15 sec"
+
+	SUBMENU_ONE_SET_TRAY  = "In tray"
+	SUBMENU_ONE_SET_CLOSE = "Close"
 
 	URL_LATEST_VERSION = "https://api.github.com/repos/PulsarG/PassManager/releases/latest"
 	URL_FOR_DOWNLOAD   = "https://github.com/PulsarG/PassManager/releases/download/"

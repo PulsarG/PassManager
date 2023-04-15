@@ -53,7 +53,12 @@ func deleteGroup(iface confile.InfaceApp, nameGr string) {
 			val := iface.GetCellList()[nameGr]
 			if len(val) == 0 {
 				delete(iface.GetCellList(), nameGr)
-				iface.GetCanvas().SetContent(container.NewHSplit(confile.CreateMangerBtns(iface), confile.CreateList(iface)))
+
+				// ***
+				a := confile.CreateMangerBtns(iface)
+				a.Resize(fyne.NewSize(150, 400))
+				iface.GetCanvas().SetContent(container.NewHBox(a, confile.CreateList(iface)))
+				// iface.GetCanvas().SetContent(container.NewHSplit(confile.CreateMangerBtns(iface), confile.CreateList(iface)))
 				confile.SaveFile(iface)
 			} else {
 				iface.GetInfoDialog().ShowInfo("Group not empty")

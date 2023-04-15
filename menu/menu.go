@@ -33,8 +33,34 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 		confile.SaveFile(iface)
 	})
 
-	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, createMenuGroupSettings(iface), menuBtnAbout)
+	// ******
+	subMenuSelectTrayHide := fyne.NewMenuItem(cons.SUBMENU_ONE_SET_TRAY, func() { confile.SaveToIni("data", "close", "false") })
+	subMenuSelectTrayClose := fyne.NewMenuItem(cons.SUBMENU_ONE_SET_CLOSE, func() { confile.SaveToIni("data", "close", "true") })
+
+	menuBtnSelectTray := fyne.NewMenuItem(cons.MENU_BTN_SELECT_TRAY_SYS, nil)
+
+	menuBtnSelectTray.ChildMenu = fyne.NewMenu("SubMenu", subMenuSelectTrayHide, subMenuSelectTrayClose)
+
+	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, createMenuGroupSettings(iface), menuBtnSelectTray, menuBtnAbout)
+
 	mainMenu := fyne.NewMainMenu(menu)
+
+
+	isSelected := confile.GetFromIni("data", "close")
+	if isSelected == "true" {
+		subMenuSelectTrayClose.Checked = true
+		subMenuSelectTrayHide.Checked = false
+		mainMenu.Refresh()
+	} else if isSelected == "false" {
+		subMenuSelectTrayClose.Checked = false
+		subMenuSelectTrayHide.Checked = true
+		mainMenu.Refresh()
+	} else {
+		subMenuSelectTrayClose.Checked = false
+		subMenuSelectTrayHide.Checked = false
+	}
+
+	
 	return mainMenu
 }
 
