@@ -57,6 +57,10 @@ func selectWindowContent(NewAppData *src.AppData) {
 	}
 }
 
+
+
+// TODO Громозкий кусок. Нужен рефакторинг
+
 func selectTraySys(mainWindow fyne.Window, mainApp fyne.App) {
 	if confile.GetFromIni("data", "close") == "" { // * if
 		dialog.ShowCustomConfirm("Tray", "Hide app", "Close app", widget.NewLabel("Select:"), func(b bool) {

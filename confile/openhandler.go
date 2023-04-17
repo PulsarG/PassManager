@@ -35,9 +35,10 @@ func findFile(iface InfaceApp) bool {
 				}
 				iface.SetCellList(cellData)
 				// ***
-				a := CreateMangerBtns(iface)
-				a.Resize(fyne.NewSize(150, 400))
-				iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+				BuildList(iface)
+				// a := CreateMangerBtns(iface)
+				// a.Resize(fyne.NewSize(150, 400))
+				// iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
 				// iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 				isFind = true
 			} else {
@@ -82,9 +83,11 @@ func GetDatafromFile(iface InfaceApp) {
 		}
 		iface.SetCellList(cellData)
 
-		a := CreateMangerBtns(iface)
-		a.Resize(fyne.NewSize(150, 400))
-		iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+		// ***
+		// a := CreateMangerBtns(iface)
+		// a.Resize(fyne.NewSize(150, 400))
+		// iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+		BuildList(iface)
 	}
 	defer file.Close()
 }

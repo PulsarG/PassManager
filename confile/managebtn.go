@@ -128,9 +128,10 @@ func setDataFromDialogCell(newCell *src.Cell, iface InfaceApp, groupp string) {
 	iface.SetCellListAppend(*newCellData, groupp)
 
 	// ***
-	a := CreateMangerBtns(iface)
-	a.Resize(fyne.NewSize(150, 400))
-	iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+	BuildList(iface)
+	// a := CreateMangerBtns(iface)
+	// a.Resize(fyne.NewSize(150, 400))
+	// iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
 
 	// iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 

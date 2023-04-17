@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
+	// "fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
@@ -35,9 +35,10 @@ func createNewFile(iface InfaceApp, code []byte) {
 				SaveToIni("file", "path", iface.GetFilepath())
 				io.WriteString(uc, string(code))
 				// ***
-				a := CreateMangerBtns(iface)
-				a.Resize(fyne.NewSize(150, 400))
-				iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+				BuildList(iface)
+				// a := CreateMangerBtns(iface)
+				// a.Resize(fyne.NewSize(150, 400))
+				// iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
 				// iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 			} else {
 				return
@@ -53,9 +54,10 @@ func createNewRotorFile(iface InfaceApp, code []byte) {
 				iface.SetFilepath(uc.URI().Path())
 				io.WriteString(uc, string(code))
 				// ***
-				a := CreateMangerBtns(iface)
-				a.Resize(fyne.NewSize(150, 400))
-				iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+				BuildList(iface)
+				// a := CreateMangerBtns(iface)
+				// a.Resize(fyne.NewSize(150, 400))
+				// iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
 				// iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 			} else {
 				return
@@ -76,9 +78,10 @@ func saveInFile(iface InfaceApp, code []byte) {
 	} else {
 		ioutil.WriteFile(GetFromIni("file", "path"), code, 0644)
 		// ***
-		a := CreateMangerBtns(iface)
-		a.Resize(fyne.NewSize(150, 400))
-		iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
+		BuildList(iface)
+		// a := CreateMangerBtns(iface)
+		// a.Resize(fyne.NewSize(150, 400))
+		// iface.GetCanvas().SetContent(container.NewHBox(a, CreateList(iface)))
 		// iface.GetCanvas().SetContent(container.NewHSplit(CreateMangerBtns(iface), CreateList(iface)))
 	}
 }

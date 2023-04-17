@@ -55,9 +55,10 @@ func deleteGroup(iface confile.InfaceApp, nameGr string) {
 				delete(iface.GetCellList(), nameGr)
 
 				// ***
-				a := confile.CreateMangerBtns(iface)
-				a.Resize(fyne.NewSize(150, 400))
-				iface.GetCanvas().SetContent(container.NewHBox(a, confile.CreateList(iface)))
+				confile.BuildList(iface)
+				// a := confile.CreateMangerBtns(iface)
+				// a.Resize(fyne.NewSize(150, 400))
+				// iface.GetCanvas().SetContent(container.NewHBox(a, confile.CreateList(iface)))
 				// iface.GetCanvas().SetContent(container.NewHSplit(confile.CreateMangerBtns(iface), confile.CreateList(iface)))
 				confile.SaveFile(iface)
 			} else {
