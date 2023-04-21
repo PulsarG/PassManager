@@ -15,3 +15,13 @@ And even better: use different master passwords for login and password. It all d
 As long as one master password is valid, positions to which it does not apply will not be decrypted, even if they were previously decrypted by their own master password.
 
 The master password is valid for the entire database, but CORRECTLY decrypts only those positions to which it was assigned by the user.
+
++
+
+Additional protection is the generation of a unique "Rotor".
+
+Basically, it's a key file. But it does not just help to decrypt the base, but contains the correct rules, "paths" to decryption. 
+
+Without it, you will not be able to get the correct data even with the correct password. 
+
+Each click on "Generate Custom Rotor" will create a unique file for each user.
