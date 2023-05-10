@@ -4,7 +4,8 @@
 package confile
 
 import (
-	"fmt"
+	// "PassManager/errs"
+	// "fmt"
 
 	"github.com/go-ini/ini"
 )
@@ -12,7 +13,7 @@ import (
 func cfgHandler() *ini.File {
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
-		fmt.Printf("Error loading config file: %s\n", err)
+		ErrorLog(err)
 		return nil
 	}
 	return cfg
@@ -27,7 +28,7 @@ func SaveToIni(section, key, val string) {
 	cfg.Section(section).Key(key).SetValue(val)
 	err := cfg.SaveTo("config.ini")
 	if err != nil {
-		fmt.Printf("Error saving config file: %s\n", err)
+		ErrorLog(err)
 		return
 	}
 }

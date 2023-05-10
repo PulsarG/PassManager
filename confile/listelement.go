@@ -5,7 +5,7 @@ package confile
 import (
 	"PassManager/cons"
 	// "crypto/sha256"
-	"fmt"
+	// "fmt"
 	"image/color"
 	"time"
 
@@ -45,7 +45,7 @@ func createListElement(groupp string, id int, label, login, pass string, iface I
 		}),
 
 		createManageBtn(cons.BTN_LABEL_SHOW_LOGPASS, func() {
-			showPass(iface, copyBtnLogin, copyBtnPass, login, pass)
+			showPass(iface, copyBtnLogin, copyBtnPass, login, pass, id)
 		}),
 	)
 
@@ -105,7 +105,7 @@ func createBtnWithIcon(iface InfaceApp, data, name string) *widget.Button {
 func copyAndBarr(txtBoundPass binding.String, iface InfaceApp) {
 	content, err := txtBoundPass.Get()
 	if err != nil {
-		fmt.Println("Error", err)
+		ErrorLog(err)
 		return
 	}
 
@@ -139,7 +139,8 @@ func progressBarLine(iface InfaceApp) {
 	}
 }
 
-func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string) {
+func showPass(iface InfaceApp, copyBtnLogin *widget.Button, copyBtnPass *widget.Button, login, pass string, id int) {
+
 	if copyBtnLogin.Text == cons.BTN_LABEL_COPY_LOGIN {
 		openPass, _ := enigma.StartCrypt(pass, iface.GetEntryCode().Text)
 

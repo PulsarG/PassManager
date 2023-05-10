@@ -3,11 +3,13 @@
 package menu
 
 import (
+	// "PassManager/errs"
+
 	"PassManager/confile"
 	"PassManager/cons"
 	// "PassManager/elem"
 	"PassManager/menu/upd"
-	"fmt"
+	// "fmt"
 
 	"net/url"
 
@@ -45,7 +47,6 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 
 	mainMenu := fyne.NewMainMenu(menu)
 
-
 	isSelected := confile.GetFromIni("data", "close")
 	if isSelected == "true" {
 		subMenuSelectTrayClose.Checked = true
@@ -60,7 +61,6 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 		subMenuSelectTrayHide.Checked = false
 	}
 
-	
 	return mainMenu
 }
 
@@ -72,7 +72,7 @@ func showVersionDalog(iface confile.InfaceApp) {
 	} else {
 		url, errParse := url.Parse(cons.URL_GITHUB_LATEST_PAGE)
 		if errParse != nil {
-			fmt.Println("Parse fail")
+			confile.ErrorLog(errParse)
 		}
 		container := container.NewVBox(
 			widget.NewLabel(cons.MENU_UPDATE_OLD+checkVersion),

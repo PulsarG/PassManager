@@ -57,8 +57,6 @@ func selectWindowContent(NewAppData *src.AppData) {
 	}
 }
 
-
-
 // TODO Громозкий кусок. Нужен рефакторинг
 
 func selectTraySys(mainWindow fyne.Window, mainApp fyne.App) {

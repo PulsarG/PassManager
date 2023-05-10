@@ -18,7 +18,7 @@ import (
 func SaveFile(iface InfaceApp) {
 	code, err := json.Marshal(iface.GetCellList())
 	if err != nil {
-		fmt.Println("Error", err)
+		ErrorLog(err)
 	}
 	if GetFromIni("file", "path") == "" {
 		createNewFile(iface, code)

@@ -31,6 +31,7 @@ func findFile(iface InfaceApp) bool {
 				data, _ := io.ReadAll(uc)
 				err := json.Unmarshal(data, &cellData)
 				if err != nil {
+					ErrorLog(err)
 					panic(err)
 				}
 				iface.SetCellList(cellData)
@@ -57,6 +58,7 @@ func GetRotorFromFile(iface InfaceApp) {
 				data, _ := io.ReadAll(uc)
 				err := json.Unmarshal(data, &NewRotor)
 				if err != nil {
+					ErrorLog(err)
 					panic(err)
 				}
 				enigma.SetCustomRotor(NewRotor)
@@ -79,7 +81,7 @@ func GetDatafromFile(iface InfaceApp) {
 		result, _ := ioutil.ReadAll(file)
 		err := json.Unmarshal(result, &cellData)
 		if err != nil {
-			panic(err)
+			ErrorLog(err)
 		}
 		iface.SetCellList(cellData)
 

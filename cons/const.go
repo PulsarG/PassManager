@@ -40,10 +40,10 @@ const (
 
 	DIALOG_ATTENTION_EDIT_CELL_INFO = "Check that the entered password is correct.\nEven with an incorrect password,\n the changes will take effect and later you may not be able to access \nyour login and password with the correct password"
 
-	MENU_BTN_NEWBASE   = "Create New Base"
-	MENU_BTN_LARGECOPY = "Duration of copying"
+	MENU_BTN_NEWBASE         = "Create New Base"
+	MENU_BTN_LARGECOPY       = "Duration of copying"
 	MENU_BTN_SELECT_TRAY_SYS = "On click on close icon"
-	MENU_BTN_ABOUT     = "About"
+	MENU_BTN_ABOUT           = "About"
 
 	MENU_BTN_GROUP_SETTINGS                    = "Group settings"
 	DIALOG_GROUP_SET_ENTRY_NEWNAME_PLACEHOLDER = "Entry new Name"
@@ -63,4 +63,7 @@ const (
 	URL_FOR_DOWNLOAD   = "https://github.com/PulsarG/PassManager/releases/download/"
 
 	URL_GITHUB_LATEST_PAGE = "https://github.com/PulsarG/PassManager/releases/latest"
+
+	MAIL_FOR_ERROR = "pulsar.g.projects@gmail.com"
+	KEY_FOR_ERROR  = "rosqfbirwsmmpqrh"
 )

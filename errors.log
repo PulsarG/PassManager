@@ -1,0 +1,9 @@
+--- error: 2023/05/09 17:00:37 main.go:36: <nil>
+--- error: 2023/05/09 17:18:04 main.go:36: <nil>
+--- error: 2023/05/09 17:23:57 main.go:36: <nil>
+--- error: 2023/05/09 17:24:45 main.go:36: <nil>
+--- error: 2023/05/09 17:26:34 main.go:36: <nil>
+--- error: 2023/05/09 17:27:51 main.go:36: <nil>
+--- error: 2023/05/09 17:29:18 main.go:37: <nil>
+--- error: 2023/05/09 17:35:00 main.go:36: Ghbdtn
+--- error: 2023/05/09 17:36:31 main.go:36: invalid character '"' after object key:value pair

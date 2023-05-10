@@ -3,8 +3,9 @@
 package upd
 
 import (
+	// "PassManager/errs"
 	"PassManager/confile"
-	"fmt"
+	// "fmt"
 	"os"
 	"time"
 
@@ -34,7 +35,7 @@ CHECK:
 func removeOld() bool {
 	err := os.Remove(confile.GetFromIni("data", "old"))
 	if err != nil {
-		fmt.Println(err.Error())
+		confile.ErrorLog(err)
 		return false
 	} else {
 		confile.SaveToIni("data", "old", "")
