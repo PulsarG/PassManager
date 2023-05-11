@@ -8,6 +8,8 @@ import (
 	"github.com/PulsarG/mailsend"
 	// "net/smtp"
 	// "strings"
+
+	"github.com/PulsarG/ConfigManager"
 )
 
 func ErrorLog(err error) {
@@ -16,6 +18,8 @@ func ErrorLog(err error) {
 		errorhandler.LoggError(err)
 	} else {
 		// fmt.Println(err.Error())
-		mailsender.SendMail(cons.MAIL_FOR_ERROR, cons.MAIL_FOR_ERROR, cons.KEY_FOR_ERROR, err.Error())
+		mailsender.SendMail(cons.MAIL_FOR_ERROR, cons.MAIL_FOR_ERROR, cons.KEY_FOR_ERROR, err)
 	}
+
+	inihandler.GetFromIni()
 }
