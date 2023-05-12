@@ -4,6 +4,7 @@ package confile
 
 import (
 	"PassManager/cons"
+	"PassManager/errloger"
 	// "crypto/sha256"
 	// "fmt"
 	"image/color"
@@ -105,7 +106,7 @@ func createBtnWithIcon(iface InfaceApp, data, name string) *widget.Button {
 func copyAndBarr(txtBoundPass binding.String, iface InfaceApp) {
 	content, err := txtBoundPass.Get()
 	if err != nil {
-		ErrorLog(err)
+		errloger.ErrorLog(err)
 		return
 	}
 

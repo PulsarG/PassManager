@@ -14,14 +14,16 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
+
+	"github.com/PulsarG/ConfigManager"
 )
 
 func main() {
 	go upd.CheckOld()
 
 	mainApp := app.New()
-	mainWindow := mainApp.NewWindow(cons.WINDOW_NAME + confile.GetFromIni("data", "version"))
-	duration, _ := strconv.Atoi(confile.GetFromIni("data", "duration"))
+	mainWindow := mainApp.NewWindow(cons.WINDOW_NAME + inihandler.GetFromIni("data", "version"))
+	duration, _ := strconv.Atoi(inihandler.GetFromIni("data", "duration"))
 	NewAppData := src.NewAppData(mainApp, mainWindow, mainWindow.Canvas(), duration)
 
 	mainWindow.Resize(fyne.NewSize(cons.WINDOW_MAIN_WEIGHT, cons.WINDOW_MAIN_HIGHT))
@@ -50,7 +52,7 @@ func main() {
 }
 
 func selectWindowContent(NewAppData *src.AppData) {
-	if confile.GetFromIni("file", "path") != "" {
+	if inihandler.GetFromIni("file", "path") != "" {
 		confile.GetDatafromFile(NewAppData)
 	} else {
 		NewAppData.GetCanvas().SetContent(container.NewCenter(confile.CreateMangerBtns(NewAppData)))
@@ -60,19 +62,19 @@ func selectWindowContent(NewAppData *src.AppData) {
 // TODO Громозкий кусок. Нужен рефакторинг
 
 func selectTraySys(mainWindow fyne.Window, mainApp fyne.App) {
-	if confile.GetFromIni("data", "close") == "" { // * if
+	if inihandler.GetFromIni("data", "close") == "" { // * if
 		dialog.ShowCustomConfirm("Tray", "Hide app", "Close app", widget.NewLabel("Select:"), func(b bool) {
 			if b { // ** if
-				confile.SaveToIni("data", "close", "false")
+				inihandler.SaveToIni("data", "close", "false")
 				mainWindow.Hide()
 			} else {
-				confile.SaveToIni("data", "close", "true")
+				inihandler.SaveToIni("data", "close", "true")
 				mainApp.Quit()
 			} // ** end if
 		}, mainWindow)
 	} else {
 
-		if confile.GetFromIni("data", "close") == "true" { // *** if
+		if inihandler.GetFromIni("data", "close") == "true" { // *** if
 			mainApp.Quit()
 		} else {
 			mainWindow.Hide()

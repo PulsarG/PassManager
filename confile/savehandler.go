@@ -9,18 +9,22 @@ import (
 	"io/ioutil"
 	"os"
 
+	"PassManager/errloger"
+
 	"fyne.io/fyne/v2"
 	// "fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	"github.com/PulsarG/ConfigManager"
 )
 
 func SaveFile(iface InfaceApp) {
 	code, err := json.Marshal(iface.GetCellList())
 	if err != nil {
-		ErrorLog(err)
+		errloger.ErrorLog(err)
 	}
-	if GetFromIni("file", "path") == "" {
+	if inihandler.GetFromIni("file", "path") == "" {
 		createNewFile(iface, code)
 	} else {
 		saveInFile(iface, code)
@@ -32,7 +36,7 @@ func createNewFile(iface InfaceApp, code []byte) {
 		func(uc fyne.URIWriteCloser, err error) {
 			if uc != nil {
 				iface.SetFilepath(uc.URI().Path())
-				SaveToIni("file", "path", iface.GetFilepath())
+				inihandler.SaveToIni("file", "path", iface.GetFilepath())
 				io.WriteString(uc, string(code))
 				// ***
 				BuildList(iface)
@@ -67,16 +71,16 @@ func createNewRotorFile(iface InfaceApp, code []byte) {
 }
 
 func saveInFile(iface InfaceApp, code []byte) {
-	file, err := os.Open(GetFromIni("file", "path"))
+	file, err := os.Open(inihandler.GetFromIni("file", "path"))
 	defer file.Close()
 	if err != nil {
 		fmt.Printf("1Error opening file: %s\n", err)
 		iface.SetFilepath("")
-		SaveToIni("file", "path", iface.GetFilepath())
+		inihandler.SaveToIni("file", "path", iface.GetFilepath())
 		dialog.ShowCustom("Not File", "", widget.NewLabel("File not found"), iface.GetWindow())
 		return
 	} else {
-		ioutil.WriteFile(GetFromIni("file", "path"), code, 0644)
+		ioutil.WriteFile(inihandler.GetFromIni("file", "path"), code, 0644)
 		// ***
 		BuildList(iface)
 		// a := CreateMangerBtns(iface)

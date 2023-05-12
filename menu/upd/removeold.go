@@ -3,13 +3,15 @@
 package upd
 
 import (
-	// "PassManager/errs"
-	"PassManager/confile"
+	"PassManager/errloger"
+	// "PassManager/confile"
 	// "fmt"
 	"os"
 	"time"
 
 	"fyne.io/fyne/v2"
+
+	"github.com/PulsarG/ConfigManager"
 )
 
 type InfaceApp interface {
@@ -20,7 +22,7 @@ func CheckOld() {
 	ticker := time.NewTicker(time.Second)
 CHECK:
 	for range ticker.C {
-		if confile.GetFromIni("data", "old") == "" {
+		if inihandler.GetFromIni("data", "old") == "" {
 			ticker.Stop()
 			break CHECK
 		} else {
@@ -33,12 +35,12 @@ CHECK:
 }
 
 func removeOld() bool {
-	err := os.Remove(confile.GetFromIni("data", "old"))
+	err := os.Remove(inihandler.GetFromIni("data", "old"))
 	if err != nil {
-		confile.ErrorLog(err)
+		errloger.ErrorLog(err)
 		return false
 	} else {
-		confile.SaveToIni("data", "old", "")
+		inihandler.SaveToIni("data", "old", "")
 		return true
 	}
 }

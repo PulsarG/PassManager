@@ -7,3 +7,13 @@
 --- error: 2023/05/09 17:29:18 main.go:37: <nil>
 --- error: 2023/05/09 17:35:00 main.go:36: Ghbdtn
 --- error: 2023/05/09 17:36:31 main.go:36: invalid character '"' after object key:value pair
+--- error: 2023/05/11 14:58:50 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 14:59:44 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:03:04 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:03:33 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:03:51 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:12:47 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:36:22 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:56:27 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:56:32 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/11 15:56:41 errhandler.go:36: invalid character 'e' looking for beginning of object key string

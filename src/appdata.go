@@ -3,6 +3,7 @@
 package src
 
 import (
+	// "fmt"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -121,6 +122,10 @@ func (a *AppData) GetCellList() map[string][]CellData {
 }
 
 func (a *AppData) SetCellListAppend(newCellData CellData, s string) {
+	if a.cellList == nil {
+		a.cellList = make(map[string][]CellData)
+	}
+	
 	if CL, ok := a.cellList[s]; ok {
 		CL = append(CL, newCellData)
 		a.cellList[s] = CL

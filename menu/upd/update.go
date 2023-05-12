@@ -4,20 +4,22 @@ package upd
 
 import (
 	// "PassManager/errs"
-
-	"PassManager/confile"
+	"PassManager/errloger"
+	// "PassManager/confile"
 	"PassManager/cons"
 	"net/http"
 	"os"
 	"os/exec"
 
 	"github.com/inconshreveable/go-update"
+
+	"github.com/PulsarG/ConfigManager"
 )
 
 func Update() string {
 	exePath, err := os.Executable()
 	if err != nil {
-		confile.ErrorLog(err)
+		errloger.ErrorLog(err)
 		panic(err)
 	}
 
@@ -26,7 +28,7 @@ func Update() string {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		confile.ErrorLog(err)
+		errloger.ErrorLog(err)
 		return "Fail download file"
 	}
 	defer resp.Body.Close()
@@ -36,22 +38,22 @@ func Update() string {
 	})
 	if err != nil {
 		if rerr := update.RollbackError(err); rerr != nil {
-			confile.ErrorLog(err)
+			errloger.ErrorLog(err)
 			return "Fail update file"
 		}
 	}
 
-	confile.SaveToIni("data", "version", newVersion)
-	confile.SaveToIni("data", "old", oldPath)
+	inihandler.SaveToIni("data", "version", newVersion)
+	inihandler.SaveToIni("data", "old", oldPath)
 
 	executablePath, err := os.Executable()
 	if err != nil {
-		confile.ErrorLog(err)
+		errloger.ErrorLog(err)
 		return "Other Fail"
 	}
 	err = exec.Command(executablePath).Start()
 	if err != nil {
-		confile.ErrorLog(err)
+		errloger.ErrorLog(err)
 		return "Fail start new version"
 	}
 
