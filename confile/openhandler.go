@@ -4,18 +4,18 @@ package confile
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 
-	"PassManager/src"
 	"PassManager/errloger"
+	"PassManager/src"
 
 	"fyne.io/fyne/v2"
 	// "fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+
 	// "fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/PulsarG/Enigma"
@@ -54,7 +54,7 @@ func findFile(iface InfaceApp) bool {
 }
 
 func GetRotorFromFile(iface InfaceApp) {
-	var NewRotor [163]int
+	var NewRotor [162]int
 	dialog.ShowFileOpen(
 		func(uc fyne.URIReadCloser, _ error) {
 			if uc != nil {
@@ -75,7 +75,7 @@ func GetDatafromFile(iface InfaceApp) {
 	cellData := iface.GetCellList()
 	file, err := os.Open(inihandler.GetFromIni("file", "path"))
 	if err != nil {
-		fmt.Printf("Error opening file: %s\n", err)
+		errloger.ErrorLog(err)
 		iface.SetFilepath("")
 		inihandler.SaveToIni("file", "path", iface.GetFilepath())
 		dialog.ShowCustom("Not File", "Ok", widget.NewLabel("File not found. Please create new file"), iface.GetWindow())

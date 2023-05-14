@@ -4,9 +4,9 @@ package menu
 
 import (
 	// "PassManager/errs"
-	"PassManager/errloger"
 	"PassManager/confile"
 	"PassManager/cons"
+	"PassManager/errloger"
 	// "PassManager/elem"
 	"PassManager/menu/upd"
 	// "fmt"
@@ -47,7 +47,7 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 
 	//*****
 	menuBtnSelectLog := fyne.NewMenuItem("Send error to email?", func() { showLogSettingDalog(iface) })
-	
+
 	//*****
 
 	menu := fyne.NewMenu("Menu", menuBtnNewBase, menuBtnLargecopy, createMenuGroupSettings(iface), menuBtnSelectTray, menuBtnSelectLog, menuBtnAbout)
@@ -67,7 +67,6 @@ func GetMenu(iface confile.InfaceApp) *fyne.MainMenu {
 		subMenuSelectTrayClose.Checked = false
 		subMenuSelectTrayHide.Checked = false
 	}
-
 
 	return mainMenu
 }
@@ -94,7 +93,26 @@ func showVersionDalog(iface confile.InfaceApp) {
 }
 
 func showLogSettingDalog(iface confile.InfaceApp) {
-	dialog.ShowConfirm("Send errors to email?", "Отправлять информацию об ошибках\n разработчику?\n Будет отправлен только текст ошибки", nil, iface.GetWindow())
+	// dialog.NewCustomConfirm()
+	currentVerLog := ""
+	if inihandler.GetFromIni("data", "sendlog") == "false" {
+		currentVerLog = "NOT SEND"
+	} else {
+		currentVerLog = "SENDER TO MAIL"
+	}
+	dialog.ShowCustomConfirm(
+		"Send errors to email?",
+		"Send",
+		"Dont",
+		widget.NewLabel("Отправлять информацию об ошибках\n разработчику?\n Будет отправлен только текст ошибки\nNow is "+currentVerLog),
+		func(b bool) {
+			if b {
+				inihandler.SaveToIni("data", "sendlog", "true")
+			} else {
+				inihandler.SaveToIni("data", "sendlog", "false")
+			}
+		},
+		iface.GetWindow())
 }
 
 func setDurationCopy(iface confile.InfaceApp, i int) {

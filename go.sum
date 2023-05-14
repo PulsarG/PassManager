@@ -48,8 +48,6 @@ github.com/PulsarG/ConfigManager v0.0.0-20230510095359-298cdafd0b63 h1:s39bPt+tz
 github.com/PulsarG/ConfigManager v0.0.0-20230510095359-298cdafd0b63/go.mod h1:QRxUTH9CbWEUpRhH2YXvUZVBG/TVL3YrCT7+oVO/c2s=
 github.com/PulsarG/Enigma v1.1.1 h1:9V1aUWlhbo++brLsxoBSmzVh+FjCOJ3+ZR10nznfr6g=
 github.com/PulsarG/Enigma v1.1.1/go.mod h1:n8sQDfCPCZ26UylzJeqy8EmIgOsz/LvkVLzHioDhIwQ=
-github.com/PulsarG/err-handler v0.0.0-20230509102655-5c76e8c8548b h1:9xUfACD+T8qhbE3XiahyWo2cBlaYx5hh6EcuIcOtVNE=
-github.com/PulsarG/err-handler v0.0.0-20230509102655-5c76e8c8548b/go.mod h1:Lfq/SEvHsGpVZ7uCd0JXgomASkVkmI3DIT2qzrxM4Hg=
 github.com/PulsarG/err-handler v0.0.0-20230510075858-29476fdd1f44 h1:qtERwuCugUJXOKxq98h5yxy1wI23F+I/P3Aa3UNF1qY=
 github.com/PulsarG/err-handler v0.0.0-20230510075858-29476fdd1f44/go.mod h1:Lfq/SEvHsGpVZ7uCd0JXgomASkVkmI3DIT2qzrxM4Hg=
 github.com/PulsarG/mailsend v0.0.0-20230509112212-0f1c07dd8b26 h1:IAWGl8BVrlxTDTSCWtTS10Ga1vpK/x+YQnXxTTjh31g=

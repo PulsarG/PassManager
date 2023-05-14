@@ -1,19 +1,28 @@
 --- error: 2023/05/09 17:00:37 main.go:36: <nil>
---- error: 2023/05/09 17:18:04 main.go:36: <nil>
---- error: 2023/05/09 17:23:57 main.go:36: <nil>
---- error: 2023/05/09 17:24:45 main.go:36: <nil>
---- error: 2023/05/09 17:26:34 main.go:36: <nil>
---- error: 2023/05/09 17:27:51 main.go:36: <nil>
---- error: 2023/05/09 17:29:18 main.go:37: <nil>
 --- error: 2023/05/09 17:35:00 main.go:36: Ghbdtn
 --- error: 2023/05/09 17:36:31 main.go:36: invalid character '"' after object key:value pair
 --- error: 2023/05/11 14:58:50 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 14:59:44 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:03:04 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:03:33 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:03:51 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:12:47 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:36:22 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:56:27 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:56:32 errhandler.go:36: invalid character 'e' looking for beginning of object key string
---- error: 2023/05/11 15:56:41 errhandler.go:36: invalid character 'e' looking for beginning of object key string
+--- error: 2023/05/14 14:17:27 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:25:54 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:28:59 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:32:57 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:34:15 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:36:57 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:47:35 errhandler.go:36: open E:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:49:02 errhandler.go:36: open C:/Game/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:49:39 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 14:56:00 errhandler.go:36: open C:/123.enigma: The system cannot find the file specified.
+--- error: 2023/05/14 15:03:00 errhandler.go:36: open E:/123.enigma: The system cannot find the file specified.
+--- error: 2023/05/14 15:03:28 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 15:05:42 errhandler.go:36: invalid argument
+--- error: 2023/05/14 15:05:51 errhandler.go:36: open C:/123123: The system cannot find the file specified.
+--- error: 2023/05/14 15:08:37 errhandler.go:36: invalid argument
+--- error: 2023/05/14 15:11:36 errhandler.go:36: open C:/123.txt: The system cannot find the file specified.
+--- error: 2023/05/14 15:11:42 errhandler.go:36: invalid argument
+--- error: 2023/05/14 15:13:28 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 15:13:36 errhandler.go:36: invalid argument
+--- error: 2023/05/14 15:16:53 errhandler.go:36: open C:/123: The system cannot find the file specified.
+--- error: 2023/05/14 15:17:40 errhandler.go:36: open E:/123: The system cannot find the file specified.
+--- error: 2023/05/14 15:18:46 errhandler.go:36: open E:/123: The system cannot find the file specified.
+--- error: 2023/05/14 15:23:15 errhandler.go:36: open E:/123333: The system cannot find the file specified.
+--- error: 2023/05/14 15:26:40 errhandler.go:36: open E:/123: The system cannot find the file specified.

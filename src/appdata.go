@@ -3,12 +3,11 @@
 package src
 
 import (
-	// "fmt"
-	"time"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+	"time"
 )
 
 type AppData struct {
@@ -125,7 +124,7 @@ func (a *AppData) SetCellListAppend(newCellData CellData, s string) {
 	if a.cellList == nil {
 		a.cellList = make(map[string][]CellData)
 	}
-	
+
 	if CL, ok := a.cellList[s]; ok {
 		CL = append(CL, newCellData)
 		a.cellList[s] = CL
@@ -151,10 +150,10 @@ func (a *AppData) SetMainBar(b *widget.ProgressBar) {
 	a.mainBar = b
 }
 
-//
 func (a *AppData) GetInfoDialog() *InfoDialog {
 	return &a.InfoDialog
 }
+
 // Class for INFOR DIALOG
 //
 

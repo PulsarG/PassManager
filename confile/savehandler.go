@@ -4,7 +4,6 @@ package confile
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -33,11 +32,15 @@ func SaveFile(iface InfaceApp) {
 
 func createNewFile(iface InfaceApp, code []byte) {
 	dialog.ShowFileSave(
-		func(uc fyne.URIWriteCloser, err error) {
+		func(uc fyne.URIWriteCloser, err123 error) {
 			if uc != nil {
 				iface.SetFilepath(uc.URI().Path())
 				inihandler.SaveToIni("file", "path", iface.GetFilepath())
-				io.WriteString(uc, string(code))
+				_, err1 := io.WriteString(uc, string(code))
+				if err1 != nil {
+					errloger.ErrorLog(err1)
+					dialog.ShowInformation("!!!", "Cant create file in this place", iface.GetWindow())
+				}
 				// ***
 				BuildList(iface)
 				// a := CreateMangerBtns(iface)
@@ -74,10 +77,10 @@ func saveInFile(iface InfaceApp, code []byte) {
 	file, err := os.Open(inihandler.GetFromIni("file", "path"))
 	defer file.Close()
 	if err != nil {
-		fmt.Printf("1Error opening file: %s\n", err)
+		errloger.ErrorLog(err)
 		iface.SetFilepath("")
 		inihandler.SaveToIni("file", "path", iface.GetFilepath())
-		dialog.ShowCustom("Not File", "", widget.NewLabel("File not found"), iface.GetWindow())
+		dialog.ShowCustom("Not File", "OK", widget.NewLabel("File not found"), iface.GetWindow())
 		return
 	} else {
 		ioutil.WriteFile(inihandler.GetFromIni("file", "path"), code, 0644)
