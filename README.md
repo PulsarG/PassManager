@@ -53,3 +53,4 @@ Each click on "Generate Custom Rotor" will create a unique file for each user.
 Каждый клик по кнопке «Создать пользовательский Ротор» создаст уникальный файл для каждого пользователя.
 
 
+<img width="945" height="463" alt="photo_2026-05-06_12-40-09" src="https://github.com/user-attachments/assets/09e4a67b-fd67-47a3-a2d7-251570afed84" />
